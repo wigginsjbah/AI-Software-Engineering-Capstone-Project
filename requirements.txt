@@ -1,55 +1,84 @@
-# Core web framework
-fastapi>=0.104.0
-uvicorn>=0.24.0
-pydantic>=2.5.0
+# Business Intelligence RAG Chatbot - Dependencies
+# 
+# INSTALLATION STRATEGY:
+# For best results, install in tiers to avoid conflicts:
+#
+# Tier 1 (Essential): py -m pip install fastapi uvicorn pydantic openai tavily-python sqlalchemy aiosqlite python-dotenv
+# Tier 2 (Advanced): py -m pip install langchain langchain-openai chromadb pandas
+# Tier 3 (Optional): py -m pip install streamlit pytest black
+#
+# Full install: py -m pip install -r requirements.txt
+# If full install fails, use tiered approach above
+#
+# ============================================================================
+
+# Core web framework - Essential for API
+fastapi>=0.104.0,<1.0.0
+uvicorn[standard]>=0.24.0,<1.0.0
+pydantic>=2.5.0,<3.0.0
 python-multipart>=0.0.6
 
-# AI and ML
-openai>=1.3.0
-tavily-python>=0.3.0
-langchain>=0.1.0
-langchain-openai>=0.0.2
-langchain-community>=0.0.10
+# AI and ML - Core intelligence
+openai>=1.3.0,<2.0.0
+tavily-python>=0.3.0,<1.0.0
 
-# Vector stores and embeddings
-chromadb>=0.4.18
-faiss-cpu>=1.8.0
-numpy>=1.26.0
-scipy>=1.11.4
+# RAG and LangChain - Advanced AI features (install separately if needed)
+langchain>=0.1.0,<1.0.0
+langchain-openai>=0.0.2,<1.0.0
+langchain-community>=0.0.10,<1.0.0
 
-# Database
-sqlalchemy==2.0.23
-alembic==1.13.1
-psycopg2-binary==2.9.9
-aiosqlite==0.19.0
+# Vector stores and embeddings - Semantic search
+chromadb>=0.4.18,<2.0.0
+faiss-cpu>=1.8.0,<2.0.0
+numpy>=2.0.0,<3.0.0
+scipy>=1.11.0,<2.0.0
 
-# Data processing
-pandas==2.1.4
-faker==20.1.0
+# Database - Data persistence
+sqlalchemy>=2.0.0,<3.0.0
+alembic>=1.12.0,<2.0.0
+aiosqlite>=0.19.0,<1.0.0
+# PostgreSQL support (optional)
+psycopg2-binary>=2.9.0,<3.0.0
 
-# HTTP and API
-httpx==0.25.2
-requests==2.31.0
+# Data processing - Business intelligence
+pandas>=2.0.0,<3.0.0
+faker>=20.0.0,<25.0.0
 
-# Environment and configuration
-python-dotenv==1.0.0
-pydantic-settings==2.1.0
+# HTTP and API - External integrations  
+httpx>=0.25.0,<1.0.0
+requests>=2.31.0,<3.0.0
 
-# Testing
-pytest==7.4.3
-pytest-asyncio==0.21.1
+# Environment and configuration - Settings management
+python-dotenv>=1.0.0,<2.0.0
+pydantic-settings>=2.1.0,<3.0.0
 
-# Development
-black==23.11.0
-flake8==6.1.0
-mypy==1.7.1
+# Testing - Quality assurance
+pytest>=7.4.0,<8.0.0
+pytest-asyncio>=0.21.0,<1.0.0
 
-# Frontend (if using Streamlit)
-streamlit==1.28.2
+# Development tools - Code quality
+black>=23.0.0,<25.0.0
+flake8>=6.0.0,<7.0.0
+mypy>=1.7.0,<2.0.0
 
-# Logging and monitoring
-loguru==0.7.2
+# Frontend - User interface (optional)
+streamlit>=1.28.0,<2.0.0
 
-# File processing
-PyPDF2==3.0.1
-python-docx==1.1.0
+# Logging and monitoring - Observability
+loguru>=0.7.0,<1.0.0
+
+# File processing - Document handling (optional)
+PyPDF2>=3.0.0,<4.0.0
+python-docx>=1.1.0,<2.0.0
+
+# Database tools - For viewing and managing SQLite files
+sqlite-utils>=3.34.0,<4.0.0
+
+# GUI Database Viewers (install separately - not pip installable):
+# DB Browser for SQLite: https://sqlitebrowser.org/
+# SQLiteStudio: https://sqlitestudio.pl/
+# 
+# Command line database tools:
+# sqlite-utils: pip install sqlite-utils
+# Usage: sqlite-utils tables business_data.db
+#        sqlite-utils query business_data.db "SELECT * FROM products LIMIT 5"
