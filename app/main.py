@@ -52,7 +52,7 @@ async def startup_event():
 @app.get("/", response_class=HTMLResponse)
 async def root():
     """Serve the main chat interface"""
-    with open("frontend/templates/index.html", "r") as f:
+    with open("frontend/templates/index.html", "r", encoding="utf-8") as f:
         return HTMLResponse(content=f.read())
 
 if __name__ == "__main__":

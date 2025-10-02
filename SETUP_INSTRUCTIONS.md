@@ -28,8 +28,15 @@ py --version
 ```
 
 ### Step 3: Install Dependencies
-We've resolved all compatibility issues with Python 3.13. Install dependencies step by step:
+✅ **UPDATED** - All compatibility issues resolved! Choose your installation method:
 
+#### Option A: One-Command Install (Recommended)
+```powershell
+# Install all dependencies at once
+py -m pip install -r requirements.txt
+```
+
+#### Option B: Step-by-Step Install (If Option A fails)
 ```powershell
 # Step 3a: Upgrade pip and build tools
 py -m pip install --upgrade pip setuptools wheel
@@ -43,11 +50,17 @@ py -m pip install openai tavily-python
 # Step 3d: Install database components
 py -m pip install sqlalchemy alembic aiosqlite python-dotenv pydantic-settings
 
-# Step 3e: Install data processing tools
+# Step 3e: Install document processing (NEW - required for full functionality)
+py -m pip install PyPDF2 python-docx python-pptx aiofiles duckduckgo-search markdown beautifulsoup4
+
+# Step 3f: Install data processing tools
 py -m pip install pandas faker loguru
 
-# Step 3f: Verify installation
-py -c "import fastapi, openai, tavily, sqlalchemy, pandas; print('✅ All dependencies installed successfully!')"
+# Step 3g: Install LangChain (optional but recommended)
+py -m pip install langchain langchain-openai langchain-community
+
+# Step 3h: Verify installation
+py -c "import fastapi, openai, tavily, sqlalchemy, pandas, PyPDF2, aiofiles; print('✅ All dependencies installed successfully!')"
 ```
 
 ### Step 4: Set Up Database
@@ -107,11 +120,13 @@ After setup, you'll have this structure:
 
 ### Running the Application
 ```powershell
-# Start the FastAPI server (when ready)
-py -m uvicorn app.main:app --reload --port 8000
+# Start the FastAPI server
+py -m uvicorn app.main:app --reload --port 8002
 
-# Access the application at: http://localhost:8000
+# Access the application at: http://localhost:8002
 ```
+
+> **Note**: The application is configured to run on port 8002 to avoid common port conflicts. All dependencies and setup steps above ensure the application runs successfully.
 
 ### Database Operations
 ```powershell
