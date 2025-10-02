@@ -102,9 +102,6 @@ class ContextBuilder:
     async def _get_database_context(self, query: str, query_analysis: Dict[str, Any]) -> Dict[str, Any]:
         """Get relevant data from business database"""
         try:
-            # TODO: Implement intelligent SQL query generation
-            # This should use the query analysis to generate appropriate SQL queries
-            
             suggested_tables = query_analysis.get("suggested_tables", [])
             entities = query_analysis.get("entities", [])
             time_period = query_analysis.get("time_period", "all_time")
@@ -116,8 +113,99 @@ class ContextBuilder:
                 "error": None
             }
             
-            # Placeholder for actual database queries
-            # In implementation, this would generate and execute SQL based on query_analysis
+            # Initialize database if needed
+            if not self.db_manager.engine:
+                await self.db_manager.initialize()
+            
+            # Query products for performance/sales related queries
+            if any(keyword in query.lower() for keyword in ['product', 'perform', 'sales', 'top', 'best', 'revenue']):
+                try:
+                    # Get top-performing products with sales data
+                    products_query = """
+                        SELECT p.id, p.name, p.category, p.price, 
+                               COUNT(o.id) as order_count,
+                               SUM(o.total_amount) as total_revenue,
+                               AVG(r.rating) as avg_rating
+                        FROM products p
+                        LEFT JOIN orders o ON p.id = o.product_id
+                        LEFT JOIN reviews r ON p.id = r.product_id
+                        WHERE p.status = 'active'
+                        GROUP BY p.id, p.name, p.category, p.price
+                        ORDER BY total_revenue DESC, order_count DESC
+                        LIMIT 10
+                    """
+                    products_result = await self.db_manager.execute_query(products_query)
+                    database_context["results"]["top_products"] = [
+                        {
+                            "id": row[0], "name": row[1], "category": row[2], 
+                            "price": row[3], "order_count": row[4] or 0,
+                            "total_revenue": row[5] or 0, "avg_rating": round(row[6] or 0, 2)
+                        } for row in products_result
+                    ]
+                    database_context["tables_queried"].append("products")
+                except Exception as e:
+                    self.logger.error(f"Error querying products: {e}")
+            
+            # Query customers for customer-related queries
+            if any(keyword in query.lower() for keyword in ['customer', 'segment', 'value', 'user']):
+                try:
+                    customers_query = """
+                        SELECT segment, COUNT(*) as count, AVG(lifetime_value) as avg_value
+                        FROM customers
+                        GROUP BY segment
+                        ORDER BY avg_value DESC
+                    """
+                    customers_result = await self.db_manager.execute_query(customers_query)
+                    database_context["results"]["customer_segments"] = [
+                        {"segment": row[0], "count": row[1], "avg_lifetime_value": round(row[2], 2)}
+                        for row in customers_result
+                    ]
+                    database_context["tables_queried"].append("customers")
+                except Exception as e:
+                    self.logger.error(f"Error querying customers: {e}")
+            
+            # Query recent sales performance
+            if any(keyword in query.lower() for keyword in ['sales', 'performance', 'revenue', 'trend']):
+                try:
+                    sales_query = """
+                        SELECT DATE(order_date) as date, 
+                               COUNT(*) as order_count,
+                               SUM(total_amount) as daily_revenue
+                        FROM orders
+                        WHERE order_date >= date('now', '-30 days')
+                        GROUP BY DATE(order_date)
+                        ORDER BY date DESC
+                        LIMIT 10
+                    """
+                    sales_result = await self.db_manager.execute_query(sales_query)
+                    database_context["results"]["recent_sales"] = [
+                        {"date": row[0], "order_count": row[1], "daily_revenue": round(row[2], 2)}
+                        for row in sales_result
+                    ]
+                    database_context["tables_queried"].append("orders")
+                except Exception as e:
+                    self.logger.error(f"Error querying sales: {e}")
+            
+            # Add summary statistics
+            try:
+                summary_query = """
+                    SELECT 
+                        (SELECT COUNT(*) FROM products WHERE status = 'active') as active_products,
+                        (SELECT COUNT(*) FROM customers) as total_customers,
+                        (SELECT COUNT(*) FROM orders) as total_orders,
+                        (SELECT SUM(total_amount) FROM orders) as total_revenue
+                """
+                summary_result = await self.db_manager.execute_query(summary_query)
+                if summary_result:
+                    row = summary_result[0]
+                    database_context["summary_stats"] = {
+                        "active_products": row[0],
+                        "total_customers": row[1], 
+                        "total_orders": row[2],
+                        "total_revenue": round(row[3] or 0, 2)
+                    }
+            except Exception as e:
+                self.logger.error(f"Error getting summary stats: {e}")
             
             return database_context
             

@@ -63,7 +63,10 @@ class DatabaseManager:
     async def execute_query(self, query: str, params: dict = None) -> list:
         """Execute a raw SQL query safely"""
         try:
-            async with self.get_session() as session:
+            if not self.session_factory:
+                await self.initialize()
+            
+            async with self.session_factory() as session:
                 result = await session.execute(text(query), params or {})
                 return result.fetchall()
         except Exception as e:

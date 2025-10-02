@@ -266,16 +266,23 @@ class ResponseGenerator:
         has_vector_data = bool(context.get("vector_results"))
         has_external_data = bool(context.get("external_research", {}).get("sources"))
         
-        # Generate response content dynamically
-        if has_vector_data:
-            # Prioritize document-based responses
-            message = self._generate_document_based_response(query, context, language)
-        elif has_external_data:
-            # Use external research when documents aren't available
-            message = self._generate_external_research_response(query, context, language)
-        elif has_db_data:
-            # Use database insights
+        # For business queries (products, sales, customers), prioritize database data
+        query_lower = query.lower()
+        is_business_query = any(keyword in query_lower for keyword in ['product', 'sales', 'customer', 'revenue', 'perform', 'top', 'best'])
+        
+        # Generate response content dynamically with improved prioritization
+        if has_db_data and is_business_query:
+            # Prioritize database for business queries
             message = self._generate_database_response(query, context, language)
+        elif has_vector_data:
+            # Use document-based responses for general queries
+            message = self._generate_document_based_response(query, context, language)
+        elif has_db_data:
+            # Use database insights for any data available
+            message = self._generate_database_response(query, context, language)
+        elif has_external_data:
+            # Use external research when other sources aren't available
+            message = self._generate_external_research_response(query, context, language)
         else:
             # Generate intelligent general response
             message = self._generate_intelligent_general_response(query, language)
@@ -485,68 +492,132 @@ External research indicates:
     def _generate_database_response(self, query: str, context: Dict[str, Any], language: str = "en") -> str:
         """Generate response based on database results"""
         db_results = context.get("database_results", {})
-        results = db_results.get("results", [])
+        results = db_results.get("results", {})
+        summary_stats = db_results.get("summary_stats", {})
         
         if language == "es":
-            response = f"""# Respuesta Basada en Base de Datos
+            response = f"""# Análisis de Datos Empresariales
 
 ## Consulta: "{query}"
 
-Análisis basado en datos de la base de datos empresarial:
-
-### Resultados de Consulta
-Se encontraron {len(results)} registros relevantes en la base de datos.
-
 """
-            if results:
-                response += "### Puntos de Datos Clave\n"
-                for i, result in enumerate(results[:5], 1):
-                    response += f"{i}. {str(result)[:100]}...\n"
-            
-            response += """
-
-## Análisis de Datos
-Los datos de la base de datos revelan:
-- Patrones específicos relacionados con tu consulta
-- Métricas cuantificables para análisis
-- Tendencias históricas en los datos disponibles
-
-## Perspectivas
-- Los datos proporcionan base factual para decisiones
-- Se recomienda análisis estadístico adicional para tendencias
-- Considera segmentación de datos para perspectivas más específicas
-
-*Análisis generado a partir de consulta de base de datos empresarial*"""
         else:
-            response = f"""# Database-Based Response
+            response = f"""# Business Data Analysis
 
 ## Query: "{query}"
 
-Analysis based on business database data:
+"""
+        
+        # Handle top products data
+        if "top_products" in results:
+            products = results["top_products"]
+            if language == "es":
+                response += f"""### 🏆 Productos con Mejor Rendimiento
 
-### Query Results
-Found {len(results)} relevant records in the database.
+Basado en nuestros datos de ventas actuales, aquí están los productos con mejor rendimiento:
 
 """
-            if results:
-                response += "### Key Data Points\n"
-                for i, result in enumerate(results[:5], 1):
-                    response += f"{i}. {str(result)[:100]}...\n"
-            
-            response += """
+                for i, product in enumerate(products[:5], 1):
+                    response += f"""**{i}. {product['name']}**
+- Categoría: {product['category']}
+- Precio: ${product['price']:,.2f}
+- Órdenes totales: {product['order_count']}
+- Ingresos totales: ${product['total_revenue']:,.2f}
+- Calificación promedio: {product['avg_rating']}/5.0 ⭐
 
-## Data Analysis
-Database data reveals:
-- Specific patterns related to your query
-- Quantifiable metrics for analysis
-- Historical trends in available data
+"""
+            else:
+                response += f"""### 🏆 Top-Performing Products
 
-## Insights
-- Data provides factual foundation for decisions
-- Recommend additional statistical analysis for trends
-- Consider data segmentation for more specific insights
+Based on our current sales data, here are the top-performing products:
 
-*Analysis generated from business database query*"""
+"""
+                for i, product in enumerate(products[:5], 1):
+                    response += f"""**{i}. {product['name']}**
+- Category: {product['category']}
+- Price: ${product['price']:,.2f}
+- Total Orders: {product['order_count']}
+- Total Revenue: ${product['total_revenue']:,.2f}
+- Average Rating: {product['avg_rating']}/5.0 ⭐
+
+"""
+        
+        # Handle customer segments data
+        if "customer_segments" in results:
+            segments = results["customer_segments"]
+            if language == "es":
+                response += f"""### 👥 Segmentos de Clientes
+
+Análisis de segmentación de clientes:
+
+"""
+                for segment in segments:
+                    response += f"""**Segmento {segment['segment']}**
+- Número de clientes: {segment['count']}
+- Valor promedio de por vida: ${segment['avg_lifetime_value']:,.2f}
+
+"""
+            else:
+                response += f"""### 👥 Customer Segments
+
+Customer segmentation analysis:
+
+"""
+                for segment in segments:
+                    response += f"""**{segment['segment']} Segment**
+- Customer Count: {segment['count']}
+- Average Lifetime Value: ${segment['avg_lifetime_value']:,.2f}
+
+"""
+        
+        # Handle recent sales data
+        if "recent_sales" in results:
+            sales = results["recent_sales"]
+            if language == "es":
+                response += f"""### 📈 Rendimiento de Ventas Recientes
+
+Últimas tendencias de ventas (últimos 10 días):
+
+"""
+                for sale in sales[:5]:
+                    response += f"""- **{sale['date']}**: {sale['order_count']} órdenes, ${sale['daily_revenue']:,.2f} en ingresos
+"""
+            else:
+                response += f"""### 📈 Recent Sales Performance
+
+Latest sales trends (last 10 days):
+
+"""
+                for sale in sales[:5]:
+                    response += f"""- **{sale['date']}**: {sale['order_count']} orders, ${sale['daily_revenue']:,.2f} revenue
+"""
+        
+        # Add summary statistics
+        if summary_stats:
+            if language == "es":
+                response += f"""
+
+### 📊 Estadísticas Generales del Negocio
+
+- **Productos activos**: {summary_stats.get('active_products', 0)}
+- **Total de clientes**: {summary_stats.get('total_customers', 0)}
+- **Total de órdenes**: {summary_stats.get('total_orders', 0)}
+- **Ingresos totales**: ${summary_stats.get('total_revenue', 0):,.2f}
+
+*Datos actualizados desde la base de datos empresarial*"""
+            else:
+                response += f"""
+
+### 📊 Overall Business Statistics
+
+- **Active Products**: {summary_stats.get('active_products', 0)}
+- **Total Customers**: {summary_stats.get('total_customers', 0)}
+- **Total Orders**: {summary_stats.get('total_orders', 0)}
+- **Total Revenue**: ${summary_stats.get('total_revenue', 0):,.2f}
+
+*Data updated from business database*"""
+        
+        return response
         
         return response
 

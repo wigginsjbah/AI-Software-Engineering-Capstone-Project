@@ -46,10 +46,21 @@ class QueryProcessor:
         try:
             query_lower = query.lower()
             
-            # Basic pattern matching
+            # Enhanced pattern matching for SQL needs
             needs_sql = any(re.search(pattern, query_lower) for pattern in self.sql_patterns)
             needs_analysis = any(re.search(pattern, query_lower) for pattern in self.analysis_patterns)
             needs_external = any(re.search(pattern, query_lower) for pattern in self.external_patterns)
+            
+            # More aggressive SQL detection for business queries
+            business_data_keywords = [
+                'product', 'customer', 'order', 'sale', 'revenue', 'perform', 'top', 'best',
+                'data', 'show', 'list', 'count', 'total', 'average', 'highest', 'lowest',
+                'recent', 'latest', 'current', 'past', 'trend', 'growth'
+            ]
+            
+            # If query mentions business data, it likely needs SQL
+            if any(keyword in query_lower for keyword in business_data_keywords):
+                needs_sql = True
             
             # Use LLM for more sophisticated analysis
             llm_analysis = await self._llm_analyze_query(query)
@@ -182,10 +193,10 @@ class QueryProcessor:
     def _default_analysis(self) -> Dict[str, Any]:
         """Return default analysis for error cases"""
         return {
-            "type": "general_inquiry",
+            "type": "data_query",
             "intent": "information_request",
             "entities": [],
-            "needs_sql": False,
+            "needs_sql": True,  # Default to True for business queries
             "needs_analysis": False,
             "needs_external_research": False,
             "complexity": "medium",
