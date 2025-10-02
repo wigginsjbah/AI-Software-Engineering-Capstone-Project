@@ -45,18 +45,16 @@ class ResponseGenerator:
         Generate a comprehensive response based on query and context
         """
         try:
-            # Use dynamic response generation based on available context
-            return self._generate_dynamic_response(query, context, query_analysis, language)
-            
-            # Original OpenAI implementation kept for reference:
-            # system_prompt = self._get_system_prompt(query_analysis.get("type", "general_inquiry"))
-            # context_summary = self._build_context_summary(context)
-            # response = await self._generate_llm_response(...)
-            # return self._structure_response(response, context, query_analysis)
+            # Use OpenAI to generate intelligent responses based on the actual query
+            system_prompt = self._get_system_prompt(query_analysis.get("type", "general_inquiry"))
+            context_summary = self._build_context_summary(context)
+            response = await self._generate_llm_response(system_prompt, query, context_summary, query_analysis)
+            return self._structure_response(response, context, query_analysis)
             
         except Exception as e:
-            self.logger.error(f"Error generating response: {str(e)}")
-            return self._fallback_response(query)
+            self.logger.error(f"Error generating LLM response: {str(e)}")
+            # Fall back to dynamic response generation if LLM fails
+            return self._generate_dynamic_response(query, context, query_analysis, language)
     
     def _get_system_prompt(self, query_type: str) -> str:
         """Get appropriate system prompt based on query type"""

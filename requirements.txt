@@ -6,89 +6,80 @@
 # 3. Open http://127.0.0.1:8002 in your browser
 #
 # INSTALLATION STRATEGY:
-# For best results, install in tiers to avoid conflicts:
-#
-# Tier 1 (Essential): py -m pip install fastapi uvicorn pydantic openai tavily-python sqlalchemy aiosqlite python-dotenv
-# Tier 2 (Advanced): py -m pip install langchain langchain-openai chromadb pandas
-# Tier 3 (Document Processing): py -m pip install PyPDF2 python-docx python-pptx aiofiles duckduckgo-search
-# Tier 4 (Optional): py -m pip install streamlit pytest black
-#
-# Full install: py -m pip install -r requirements.txt
-# If full install fails, use tiered approach above
+# Dependencies are ordered by installation priority to avoid conflicts.
+# Base dependencies install first, followed by packages that depend on them.
 #
 # ============================================================================
 
-# Core web framework - Essential for API
-fastapi>=0.104.0,<1.0.0
-uvicorn[standard]>=0.24.0,<1.0.0
+# TIER 1: Base Python packages and core dependencies
+# These must be installed first as they are dependencies for other packages
+python-dotenv>=1.0.0,<2.0.0
+numpy>=2.0.0,<3.0.0
+scipy>=1.11.0,<2.0.0
+
+# TIER 2: Core web framework and data handling
+# Pydantic must come before FastAPI and other packages that depend on it
 pydantic>=2.5.0,<3.0.0
+pydantic-settings>=2.1.0,<3.0.0
 python-multipart>=0.0.6
 
-# AI and ML - Core intelligence
+# HTTP clients and core utilities
+httpx>=0.25.0,<1.0.0
+requests>=2.31.0,<3.0.0
+aiofiles>=24.1.0,<25.0.0
+
+# TIER 3: Database foundations
+# SQLAlchemy before packages that use it
+sqlalchemy>=2.0.0,<3.0.0
+aiosqlite>=0.19.0,<1.0.0
+alembic>=1.12.0,<2.0.0
+psycopg2-binary>=2.9.0,<3.0.0
+
+# Data processing foundations
+pandas>=2.2.0,<3.0.0
+faker>=20.1.0,<25.0.0
+
+# TIER 4: Web framework (depends on pydantic)
+fastapi>=0.104.0,<1.0.0
+uvicorn[standard]>=0.24.0,<1.0.0
+
+# TIER 5: AI and ML core packages
 openai>=1.3.0,<2.0.0
 tavily-python>=0.3.0,<1.0.0
 
-# RAG and LangChain - Advanced AI features (install separately if needed)
+# TIER 6: Vector stores and embeddings (depend on numpy)
+faiss-cpu>=1.8.0,<2.0.0
+chromadb>=0.4.18,<2.0.0
+
+# TIER 7: LangChain ecosystem (depends on openai and other AI packages)
 langchain>=0.1.0,<1.0.0
 langchain-openai>=0.0.2,<1.0.0
 langchain-community>=0.0.10,<1.0.0
 
-# Vector stores and embeddings - Semantic search
-chromadb>=0.4.18,<2.0.0
-faiss-cpu>=1.8.0,<2.0.0
-numpy>=2.0.0,<3.0.0
-scipy>=1.11.0,<2.0.0
+# TIER 8: Document processing (can depend on multiple base packages)
+PyPDF2>=3.0.0,<4.0.0
+python-docx>=1.1.0,<2.0.0
+python-pptx>=1.0.0,<2.0.0
+markdown>=3.9,<4.0.0
+beautifulsoup4>=4.14.0,<5.0.0
+soupsieve>=2.8,<3.0.0
+XlsxWriter>=3.2.0,<4.0.0
 
-# Database - Data persistence
-sqlalchemy>=2.0.0,<3.0.0
-alembic>=1.12.0,<2.0.0
-aiosqlite>=0.19.0,<1.0.0
-# PostgreSQL support (optional)
-psycopg2-binary>=2.9.0,<3.0.0
+# TIER 9: Search and additional integrations
+duckduckgo-search>=8.1.0,<9.0.0
 
-# Data processing - Business intelligence
-pandas>=2.2.0,<3.0.0
-faker>=20.1.0,<25.0.0
+# TIER 10: Frontend and UI (optional, depends on many other packages)
+streamlit>=1.28.2,<2.0.0
 
-# HTTP and API - External integrations  
-httpx>=0.25.0,<1.0.0
-requests>=2.31.0,<3.0.0
-
-# Environment and configuration - Settings management
-python-dotenv>=1.0.0,<2.0.0
-pydantic-settings>=2.1.0,<3.0.0
-
-# Testing - Quality assurance
+# TIER 11: Development and testing tools (should be last)
 pytest>=7.4.3,<8.0.0
 pytest-asyncio>=0.21.1,<1.0.0
-
-# Development tools - Code quality
 black>=23.0.0,<25.0.0
 flake8>=6.0.0,<7.0.0
 mypy>=1.7.0,<2.0.0
 
-# Frontend - User interface (optional)
-streamlit>=1.28.2,<2.0.0
-
-# Logging and monitoring - Observability
+# TIER 12: Logging and utilities (minimal dependencies)
 loguru>=0.7.0,<1.0.0
-
-# File processing - Document handling (optional)
-PyPDF2>=3.0.0,<4.0.0
-python-docx>=1.1.0,<2.0.0
-python-pptx>=1.0.0,<2.0.0
-aiofiles>=24.1.0,<25.0.0
-markdown>=3.9,<4.0.0
-beautifulsoup4>=4.14.0,<5.0.0
-
-# Search functionality - Web search integration
-duckduckgo-search>=8.1.0,<9.0.0
-
-# Additional document processing
-XlsxWriter>=3.2.0,<4.0.0
-soupsieve>=2.8,<3.0.0
-
-# Database tools - For viewing and managing SQLite files
 sqlite-utils>=3.34.0,<4.0.0
 
 # GUI Database Viewers (install separately - not pip installable):
