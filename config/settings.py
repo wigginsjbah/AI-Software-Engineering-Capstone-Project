@@ -10,9 +10,9 @@ import os
 class Settings(BaseSettings):
     """Application settings"""
     
-    # API Keys
-    OPENAI_API_KEY: str = Field(..., description="OpenAI API key")
-    TAVILY_API_KEY: str = Field(..., description="Tavily API key")
+    # API Keys (optional for demo mode)
+    OPENAI_API_KEY: str = Field(default="demo-key", description="OpenAI API key")
+    TAVILY_API_KEY: str = Field(default="demo-key", description="Tavily API key")
     
     # Database
     DATABASE_URL: str = Field(default="sqlite:///./business_data.db", description="Database connection URL")
