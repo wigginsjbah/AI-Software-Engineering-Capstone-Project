@@ -11,6 +11,7 @@ class ChatRequest(BaseModel):
     message: str = Field(..., description="User's message/query")
     session_id: str = Field(default="default", description="Chat session identifier")
     include_sources: bool = Field(default=True, description="Whether to include sources in response")
+    language: str = Field(default="en", description="Language preference (en/es)")
     context: Optional[Dict[str, Any]] = Field(default=None, description="Additional context")
 
 class ChatSource(BaseModel):

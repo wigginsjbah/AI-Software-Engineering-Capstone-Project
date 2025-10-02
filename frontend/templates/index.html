@@ -13,38 +13,231 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        /* Enhanced response formatting */
+        .response-content {
+            line-height: 1.6;
+        }
+        .response-content h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin: 1rem 0 0.5rem 0;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 0.25rem;
+        }
+        .response-content h2 {
+            font-size: 1.25rem;
+            font-weight: semibold;
+            color: #374151;
+            margin: 1rem 0 0.5rem 0;
+        }
+        .response-content h3 {
+            font-size: 1.125rem;
+            font-weight: medium;
+            color: #4b5563;
+            margin: 0.75rem 0 0.25rem 0;
+        }
+        .response-content h4 {
+            font-size: 1rem;
+            font-weight: medium;
+            color: #6b7280;
+            margin: 0.5rem 0 0.25rem 0;
+        }
+        .response-content ul {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+        }
+        .response-content li {
+            margin: 0.25rem 0;
+        }
+        .response-content strong, .response-content **strong** {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        .response-content em {
+            font-style: italic;
+            color: #6b7280;
+        }
+        .response-content code {
+            background-color: #f3f4f6;
+            padding: 0.125rem 0.25rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+        }
+        .response-content pre {
+            background-color: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid #3b82f6;
+            margin: 0.5rem 0;
+            overflow-x: auto;
+        }
+        .response-content blockquote {
+            border-left: 4px solid #e5e7eb;
+            padding-left: 1rem;
+            margin: 0.5rem 0;
+            font-style: italic;
+            color: #6b7280;
+        }
+        
+        /* Source styling */
+        .sources-container {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin-top: 0.75rem;
+        }
+        .source-item {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.25rem;
+            padding: 0.5rem;
+            margin: 0.25rem 0;
+            font-size: 0.875rem;
+        }
+        
+        /* SQL query styling */
+        .sql-container {
+            background-color: #1f2937;
+            color: #f9fafb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 0.75rem;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
     </style>
 </head>
 <body class="bg-gray-100 h-screen flex flex-col">
     <!-- Header -->
     <div class="bg-blue-600 text-white p-4 shadow-lg">
-        <h1 class="text-2xl font-bold">Business Intelligence Chatbot</h1>
-        <p class="text-blue-100">AI-powered insights from your business data</p>
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold" data-translate="title">Business Intelligence Chatbot</h1>
+                <p class="text-blue-100" data-translate="subtitle">AI-powered insights from your business data</p>
+            </div>
+            <!-- Language Toggle -->
+            <div class="flex items-center space-x-3">
+                <span class="text-sm text-blue-100" data-translate="language">Language:</span>
+                <button 
+                    id="language-toggle"
+                    onclick="toggleLanguage()" 
+                    class="bg-blue-500 hover:bg-blue-400 text-white px-3 py-1 rounded-lg text-sm font-semibold transition-colors duration-200 flex items-center space-x-2"
+                >
+                    <span id="current-lang">EN</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Main Chat Container -->
     <div class="flex-1 flex overflow-hidden">
         <!-- Sidebar -->
         <div class="w-1/4 bg-white border-r border-gray-200 p-4 overflow-y-auto">
-            <h3 class="font-semibold text-gray-800 mb-4">Quick Queries</h3>
+            <h3 class="font-semibold text-gray-800 mb-4" data-translate="quick_queries">Quick Queries</h3>
             <div class="space-y-2" id="suggestions">
-                <button class="w-full text-left p-2 bg-gray-50 hover:bg-gray-100 rounded text-sm suggestion-btn">
+                <button class="w-full text-left p-2 bg-gray-50 hover:bg-gray-100 rounded text-sm suggestion-btn" data-translate="suggestion_1">
                     What are our top-performing products?
                 </button>
-                <button class="w-full text-left p-2 bg-gray-50 hover:bg-gray-100 rounded text-sm suggestion-btn">
+                <button class="w-full text-left p-2 bg-gray-50 hover:bg-gray-100 rounded text-sm suggestion-btn" data-translate="suggestion_2">
                     Show customer sentiment analysis
                 </button>
-                <button class="w-full text-left p-2 bg-gray-50 hover:bg-gray-100 rounded text-sm suggestion-btn">
+                <button class="w-full text-left p-2 bg-gray-50 hover:bg-gray-100 rounded text-sm suggestion-btn" data-translate="suggestion_3">
                     Generate sales performance report
                 </button>
-                <button class="w-full text-left p-2 bg-gray-50 hover:bg-gray-100 rounded text-sm suggestion-btn">
+                <button class="w-full text-left p-2 bg-gray-50 hover:bg-gray-100 rounded text-sm suggestion-btn" data-translate="suggestion_4">
                     Which regions have highest growth?
                 </button>
             </div>
 
-            <h3 class="font-semibold text-gray-800 mb-4 mt-8">Chat History</h3>
+            <h3 class="font-semibold text-gray-800 mb-4 mt-8" data-translate="chat_history">Chat History</h3>
             <div id="chat-sessions" class="space-y-2">
                 <!-- Chat sessions will be populated here -->
+            </div>
+
+            <!-- Document Management Section -->
+            <h3 class="font-semibold text-gray-800 mb-4 mt-8" data-translate="document_management">Your Documents</h3>
+            
+            <!-- Upload Area -->
+        <!-- Document Management Section -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow-sm">
+            <!-- Document Header -->
+            <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between cursor-pointer" 
+                 onclick="toggleDocumentsSection()">
+                <div class="flex items-center space-x-2">
+                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <h3 class="text-lg font-semibold text-gray-800" data-translate="documents_section">Documents</h3>
+                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full" id="doc-count">0</span>
+                </div>
+                <svg id="documents-chevron" class="w-5 h-5 text-gray-400 transform transition-transform duration-200" 
+                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+            
+            <!-- Document Content (Collapsible) -->
+            <div id="documents-content" class="p-4 space-y-4">
+                <!-- Upload Area -->
+                <div id="upload-area" 
+                     class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors cursor-pointer"
+                     ondrop="handleDrop(event)" 
+                     ondragover="handleDragOver(event)" 
+                     ondragleave="handleDragLeave(event)">
+                    <div class="space-y-2">
+                        <svg class="mx-auto h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                        <p class="text-sm text-gray-600 mb-2" data-translate="upload_instruction">Upload business documents</p>
+                        <input type="file" id="document-upload" class="hidden" accept=".txt,.md,.pdf,.docx,.doc,.html,.htm" multiple>
+                        <button onclick="document.getElementById('document-upload').click()" class="text-blue-600 hover:text-blue-800 text-sm font-medium" data-translate="choose_files">
+                            Choose Files
+                        </button>
+                        <p class="text-xs text-gray-500" data-translate="supported_formats">
+                            Supports: PDF, Word, Text, Markdown, HTML
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Document List -->
+                <div class="space-y-2" id="document-list">
+                    <div class="text-sm text-gray-500 text-center py-4" id="no-documents" data-translate="no_documents">
+                        No documents uploaded yet
+                    </div>
+                </div>
+
+                <!-- Document Statistics -->
+                <div class="mt-4 p-3 bg-gray-50 rounded-lg" id="document-stats" style="display: none;">
+                    <h4 class="font-medium text-gray-700 mb-2" data-translate="document_stats">Document Statistics</h4>
+                    <div class="text-xs text-gray-600 space-y-1">
+                        <div>Total: <span id="total-docs">0</span> documents</div>
+                        <div>Size: <span id="total-size">0 MB</span></div>
+                        <div>Categories: <span id="doc-categories">None</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>            <!-- Document List -->
+            <div class="space-y-2" id="document-list">
+                <div class="text-sm text-gray-500 text-center py-2" id="no-documents" data-translate="no_documents">
+                    No documents uploaded yet
+                </div>
+            </div>
+
+            <!-- Document Statistics -->
+            <div class="mt-4 p-3 bg-gray-50 rounded-lg" id="document-stats" style="display: none;">
+                <h4 class="font-medium text-gray-700 mb-2" data-translate="document_stats">Document Statistics</h4>
+                <div class="text-xs text-gray-600 space-y-1">
+                    <div>Total: <span id="total-docs">0</span> documents</div>
+                    <div>Size: <span id="total-size">0 MB</span></div>
+                </div>
             </div>
         </div>
 
@@ -62,7 +255,7 @@
                                 </div>
                                 <span class="font-semibold text-gray-800">Business Intelligence Assistant</span>
                             </div>
-                            <p class="text-gray-700">
+                            <p class="text-gray-700" data-translate="welcome_message">
                                 Hello! I'm your business intelligence assistant. I can help you analyze your business data, 
                                 generate reports, and provide insights. Ask me about products, customers, sales, reviews, 
                                 or any business metrics you'd like to explore.
@@ -78,6 +271,7 @@
                     <input 
                         type="text" 
                         id="message-input" 
+                        data-translate-placeholder="input_placeholder"
                         placeholder="Ask about your business data..."
                         class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         onkeypress="handleKeyPress(event)"
@@ -86,6 +280,7 @@
                         id="send-button"
                         onclick="sendMessage()" 
                         class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        data-translate="send_button"
                     >
                         Send
                     </button>
@@ -93,9 +288,9 @@
                 <div class="mt-2 flex items-center space-x-4 text-sm text-gray-500">
                     <label class="flex items-center">
                         <input type="checkbox" id="include-sources" checked class="mr-1">
-                        Include sources
+                        <span data-translate="include_sources">Include sources</span>
                     </label>
-                    <span id="status-indicator" class="text-green-500">● Online</span>
+                    <span id="status-indicator" class="text-green-500">● <span data-translate="status_online">Online</span></span>
                 </div>
             </div>
         </div>
@@ -171,13 +366,13 @@
                 let sourcesHtml = '';
                 if (sources && sources.length > 0) {
                     sourcesHtml = `
-                        <div class="mt-3 pt-3 border-t border-gray-200">
-                            <h4 class="text-sm font-semibold text-gray-600 mb-2">Sources:</h4>
+                        <div class="sources-container">
+                            <h4 class="text-sm font-semibold text-gray-600 mb-2" data-translate="sources">Sources:</h4>
                             <div class="space-y-1">
                                 ${sources.map(source => `
-                                    <div class="text-xs text-gray-500 flex items-center">
+                                    <div class="source-item">
                                         <span class="inline-block w-2 h-2 bg-${source.type === 'database' ? 'green' : source.type === 'external' ? 'blue' : 'yellow'}-400 rounded-full mr-2"></span>
-                                        ${source.name} (${Math.round(source.confidence * 100)}%)
+                                        ${source.description || source.name} ${source.confidence ? '(' + Math.round(source.confidence * 100) + '%)' : ''}
                                     </div>
                                 `).join('')}
                             </div>
@@ -188,22 +383,25 @@
                 let sqlHtml = '';
                 if (sqlQuery) {
                     sqlHtml = `
-                        <div class="mt-3 pt-3 border-t border-gray-200">
-                            <h4 class="text-sm font-semibold text-gray-600 mb-2">SQL Query:</h4>
-                            <pre class="text-xs bg-gray-100 p-2 rounded overflow-x-auto"><code>${sqlQuery}</code></pre>
+                        <div class="sql-container">
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2" data-translate="sql_query">SQL Query:</h4>
+                            <code>${sqlQuery}</code>
                         </div>
                     `;
                 }
                 
+                // Format the content with better markdown-style parsing
+                const formattedContent = formatResponseContent(content);
+                
                 messageDiv.innerHTML = `
-                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                        <div class="flex items-center mb-2">
-                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-semibold mr-3">
+                    <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                        <div class="flex items-center mb-3">
+                            <div class="w-8 h-8 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold mr-3">
                                 AI
                             </div>
-                            <span class="font-semibold text-gray-800">Assistant</span>
+                            <span class="font-semibold text-gray-800" data-translate="assistant">Assistant</span>
                         </div>
-                        <div class="text-gray-700">${content.replace(/\n/g, '<br>')}</div>
+                        <div class="response-content text-gray-700">${formattedContent}</div>
                         ${sourcesHtml}
                         ${sqlHtml}
                     </div>
@@ -212,6 +410,50 @@
             
             messagesContainer.appendChild(messageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // Update translations for new content
+            if (typeof updateTranslations === 'function') {
+                updateTranslations();
+            }
+        }
+
+        // Format response content with better styling
+        function formatResponseContent(content) {
+            if (!content) return '';
+            
+            // Convert markdown-style formatting to HTML
+            return content
+                // Headers
+                .replace(/^# (.*$)/gm, '<h1>$1</h1>')
+                .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+                .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+                .replace(/^#### (.*$)/gm, '<h4>$1</h4>')
+                
+                // Bold text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                
+                // Italic text
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                
+                // Lists
+                .replace(/^- (.*$)/gm, '<li>$1</li>')
+                
+                // Line breaks
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/\n/g, '<br>')
+                
+                // Wrap in paragraphs
+                .replace(/^(.+)/m, '<p>$1')
+                .replace(/(.+)$/, '$1</p>')
+                
+                // Fix list wrapping
+                .replace(/<p>(<li>.*<\/li>)<\/p>/gs, '<ul>$1</ul>')
+                .replace(/<br><li>/g, '<li>')
+                .replace(/<\/li><br>/g, '</li>')
+                
+                // Clean up empty paragraphs
+                .replace(/<p><\/p>/g, '')
+                .replace(/<p><br><\/p>/g, '');
         }
 
         // Set loading state
@@ -233,17 +475,6 @@
             }
         }
 
-        // Handle suggestion clicks
-        document.addEventListener('DOMContentLoaded', function() {
-            const suggestionButtons = document.querySelectorAll('.suggestion-btn');
-            suggestionButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    document.getElementById('message-input').value = this.textContent.trim();
-                    sendMessage();
-                });
-            });
-        });
-
         // Check health status periodically
         setInterval(async () => {
             try {
@@ -251,18 +482,459 @@
                 const statusIndicator = document.getElementById('status-indicator');
                 
                 if (response.ok) {
-                    statusIndicator.textContent = '● Online';
+                    statusIndicator.innerHTML = '● <span data-translate="status_online">Online</span>';
                     statusIndicator.className = 'text-green-500';
                 } else {
-                    statusIndicator.textContent = '● Connection Issues';
+                    statusIndicator.innerHTML = '● <span data-translate="status_issues">Connection Issues</span>';
                     statusIndicator.className = 'text-red-500';
                 }
+                updateTranslations(); // Update translations when status changes
             } catch (error) {
                 const statusIndicator = document.getElementById('status-indicator');
-                statusIndicator.textContent = '● Offline';
+                statusIndicator.innerHTML = '● <span data-translate="status_offline">Offline</span>';
                 statusIndicator.className = 'text-red-500';
+                updateTranslations(); // Update translations when status changes
             }
         }, 30000); // Check every 30 seconds
+
+        // ===== LANGUAGE SUPPORT SYSTEM =====
+        
+        // Translation dictionaries
+        const translations = {
+            en: {
+                title: "Business Intelligence Chatbot",
+                subtitle: "AI-powered insights from your business data",
+                language: "Language:",
+                quick_queries: "Quick Queries",
+                suggestion_1: "What are our top-performing products?",
+                suggestion_2: "Show customer sentiment analysis",
+                suggestion_3: "Generate sales performance report",
+                suggestion_4: "Which regions have highest growth?",
+                chat_history: "Chat History",
+                welcome_message: "Hello! I'm your business intelligence assistant. I can help you analyze your business data, generate reports, and provide insights. Ask me about products, customers, sales, reviews, or any business metrics you'd like to explore.",
+                input_placeholder: "Ask about your business data...",
+                send_button: "Send",
+                include_sources: "Include sources",
+                status_online: "Online",
+                status_issues: "Connection Issues",
+                status_offline: "Offline",
+                thinking: "Thinking...",
+                processing: "Processing",
+                ai_assistant: "Business Intelligence Assistant",
+                assistant: "Assistant",
+                sources: "Sources:",
+                sql_query: "SQL Query:",
+                error_message: "Sorry, I encountered an error processing your request.",
+                connection_error: "Sorry, I couldn't connect to the server. Please try again.",
+                document_management: "Your Documents",
+                upload_instruction: "Upload business documents",
+                choose_files: "Choose Files",
+                supported_formats: "PDF, Word, Text, HTML",
+                no_documents: "No documents uploaded yet",
+                documents_section: "Documents",
+                document_stats: "Document Statistics",
+                uploading: "Uploading...",
+                upload_success: "Document uploaded successfully!",
+                upload_error: "Failed to upload document",
+                delete_document: "Delete",
+                document_category: "Category"
+            },
+            es: {
+                title: "Chatbot de Inteligencia Empresarial",
+                subtitle: "Análisis impulsado por IA de tus datos empresariales",
+                language: "Idioma:",
+                quick_queries: "Consultas Rápidas",
+                suggestion_1: "¿Cuáles son nuestros productos de mejor rendimiento?",
+                suggestion_2: "Mostrar análisis de sentimiento de clientes",
+                suggestion_3: "Generar reporte de rendimiento de ventas",
+                suggestion_4: "¿Qué regiones tienen el mayor crecimiento?",
+                chat_history: "Historial de Chat",
+                welcome_message: "¡Hola! Soy tu asistente de inteligencia empresarial. Puedo ayudarte a analizar tus datos empresariales, generar reportes y proporcionar análisis. Pregúntame sobre productos, clientes, ventas, reseñas o cualquier métrica empresarial que quieras explorar.",
+                input_placeholder: "Pregunta sobre tus datos empresariales...",
+                send_button: "Enviar",
+                include_sources: "Incluir fuentes",
+                status_online: "En línea",
+                status_issues: "Problemas de conexión",
+                status_offline: "Desconectado",
+                thinking: "Pensando...",
+                processing: "Procesando",
+                ai_assistant: "Asistente de Inteligencia Empresarial",
+                assistant: "Asistente",
+                sources: "Fuentes:",
+                sql_query: "Consulta SQL:",
+                error_message: "Lo siento, encontré un error procesando tu solicitud.",
+                connection_error: "Lo siento, no pude conectar con el servidor. Por favor intenta de nuevo.",
+                document_management: "Tus Documentos",
+                upload_instruction: "Subir documentos empresariales",
+                choose_files: "Elegir Archivos",
+                supported_formats: "PDF, Word, Texto, HTML",
+                no_documents: "Aún no se han subido documentos",
+                documents_section: "Documentos",
+                document_stats: "Estadísticas de Documentos",
+                uploading: "Subiendo...",
+                upload_success: "¡Documento subido exitosamente!",
+                upload_error: "Error al subir documento",
+                delete_document: "Eliminar",
+                document_category: "Categoría"
+            }
+        };
+
+        // Current language state
+        let currentLanguage = localStorage.getItem('chatbot-language') || 'en';
+
+        // Language toggle function
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'es' : 'en';
+            localStorage.setItem('chatbot-language', currentLanguage);
+            updateLanguageDisplay();
+            updateTranslations();
+        }
+
+        // Update language display
+        function updateLanguageDisplay() {
+            document.getElementById('current-lang').textContent = currentLanguage.toUpperCase();
+            document.documentElement.lang = currentLanguage;
+        }
+
+        // Update all translations on the page
+        function updateTranslations() {
+            const elementsToTranslate = document.querySelectorAll('[data-translate]');
+            elementsToTranslate.forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    element.textContent = translations[currentLanguage][key];
+                }
+            });
+
+            // Handle placeholder translations
+            const placeholderElements = document.querySelectorAll('[data-translate-placeholder]');
+            placeholderElements.forEach(element => {
+                const key = element.getAttribute('data-translate-placeholder');
+                if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    element.placeholder = translations[currentLanguage][key];
+                }
+            });
+
+            // Update button text if currently showing loading state
+            const sendButton = document.getElementById('send-button');
+            if (isLoading) {
+                sendButton.textContent = translations[currentLanguage]['thinking'];
+            }
+
+            // Update status indicator processing text
+            const statusIndicator = document.getElementById('status-indicator');
+            if (statusIndicator.textContent.includes('Processing') || statusIndicator.textContent.includes('Procesando')) {
+                statusIndicator.innerHTML = `● <span data-translate="processing">${translations[currentLanguage]['processing']}</span>`;
+            }
+        }
+
+        // Modified sendMessage function to include language
+        const originalSendMessage = sendMessage;
+        sendMessage = async function() {
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+            
+            if (!message || isLoading) return;
+            
+            // Clear input and show user message
+            input.value = '';
+            addMessage(message, 'user');
+            setLoading(true);
+            
+            try {
+                const response = await fetch('/api/v1/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        session_id: sessionId,
+                        include_sources: document.getElementById('include-sources').checked,
+                        language: currentLanguage // Include current language
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    addMessage(data.message, 'assistant', data.sources, data.sql_query);
+                } else {
+                    addMessage(translations[currentLanguage]['error_message'], 'assistant');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                addMessage(translations[currentLanguage]['connection_error'], 'assistant');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        // Modified setLoading function to use translations
+        const originalSetLoading = setLoading;
+        setLoading = function(loading) {
+            isLoading = loading;
+            const sendButton = document.getElementById('send-button');
+            const statusIndicator = document.getElementById('status-indicator');
+            
+            if (loading) {
+                sendButton.textContent = translations[currentLanguage]['thinking'];
+                sendButton.disabled = true;
+                statusIndicator.innerHTML = `● <span data-translate="processing">${translations[currentLanguage]['processing']}</span>`;
+                statusIndicator.className = 'text-yellow-500';
+            } else {
+                sendButton.textContent = translations[currentLanguage]['send_button'];
+                sendButton.disabled = false;
+                statusIndicator.innerHTML = `● <span data-translate="status_online">${translations[currentLanguage]['status_online']}</span>`;
+                statusIndicator.className = 'text-green-500';
+            }
+        };
+
+        // Initialize language on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateLanguageDisplay();
+            updateTranslations();
+            
+            // Update suggestion button click handlers to use current text
+            const suggestionButtons = document.querySelectorAll('.suggestion-btn');
+            suggestionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    document.getElementById('message-input').value = this.textContent.trim();
+                    sendMessage();
+                });
+            });
+
+            // Initialize document management
+            initializeDocumentManagement();
+            loadDocuments();
+        });
+
+        // Document Management Functions
+        function initializeDocumentManagement() {
+            const uploadInput = document.getElementById('document-upload');
+            const uploadArea = document.getElementById('upload-area');
+
+            // File upload handler
+            uploadInput.addEventListener('change', handleFileUpload);
+
+            // Drag and drop functionality
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('border-blue-400', 'bg-blue-50');
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('border-blue-400', 'bg-blue-50');
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('border-blue-400', 'bg-blue-50');
+                const files = e.dataTransfer.files;
+                uploadFiles(files);
+            });
+        }
+
+        async function handleFileUpload(event) {
+            const files = event.target.files;
+            await uploadFiles(files);
+        }
+
+        async function uploadFiles(files) {
+            for (let file of files) {
+                await uploadSingleFile(file);
+            }
+            await loadDocuments();
+        }
+
+        async function uploadSingleFile(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('category', 'business');
+
+            // Show upload progress
+            showUploadProgress(file.name);
+
+            try {
+                const response = await fetch('/api/v1/documents/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showUploadSuccess(file.name);
+                } else {
+                    throw new Error(result.detail || 'Upload failed');
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+                showUploadError(file.name, error.message);
+            }
+        }
+
+        async function loadDocuments() {
+            try {
+                const response = await fetch('/api/v1/documents/');
+                const result = await response.json();
+
+                if (result.success) {
+                    displayDocuments(result.documents);
+                    updateDocumentStats(result.documents);
+                }
+            } catch (error) {
+                console.error('Error loading documents:', error);
+            }
+        }
+
+        function displayDocuments(documents) {
+            const documentList = document.getElementById('document-list');
+            const noDocuments = document.getElementById('no-documents');
+
+            if (documents.length === 0) {
+                noDocuments.style.display = 'block';
+                documentList.innerHTML = '<div class="text-sm text-gray-500 text-center py-2" id="no-documents" data-translate="no_documents">No documents uploaded yet</div>';
+                return;
+            }
+
+            noDocuments.style.display = 'none';
+            
+            const documentsHTML = documents.map(doc => `
+                <div class="bg-white border border-gray-200 rounded-lg p-3 hover:shadow-sm transition-shadow">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-sm font-medium text-gray-900 truncate" title="${doc.filename}">
+                                ${doc.filename}
+                            </h4>
+                            <p class="text-xs text-gray-500 mt-1">
+                                ${doc.category} • ${formatFileSize(doc.file_size)} • ${formatDate(doc.upload_date)}
+                            </p>
+                            <p class="text-xs text-gray-600 mt-1 line-clamp-2">
+                                ${doc.content_preview}
+                            </p>
+                        </div>
+                        <button onclick="deleteDocument('${doc.id}')" 
+                                class="ml-2 text-red-600 hover:text-red-800 text-xs" 
+                                data-translate="delete_document">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            documentList.innerHTML = documentsHTML;
+        }
+
+        function updateDocumentStats(documents) {
+            const statsContainer = document.getElementById('document-stats');
+            const totalDocs = document.getElementById('total-docs');
+            const totalSize = document.getElementById('total-size');
+            const docCategories = document.getElementById('doc-categories');
+            const docCount = document.getElementById('doc-count');
+
+            if (documents.length > 0) {
+                statsContainer.style.display = 'block';
+                totalDocs.textContent = documents.length;
+                docCount.textContent = documents.length;
+                
+                const totalBytes = documents.reduce((sum, doc) => sum + doc.file_size, 0);
+                totalSize.textContent = formatFileSize(totalBytes);
+                
+                // Count categories
+                const categories = {};
+                documents.forEach(doc => {
+                    categories[doc.category] = (categories[doc.category] || 0) + 1;
+                });
+                
+                const categoryText = Object.entries(categories)
+                    .map(([cat, count]) => `${cat} (${count})`)
+                    .join(', ');
+                docCategories.textContent = categoryText;
+            } else {
+                statsContainer.style.display = 'none';
+                docCount.textContent = '0';
+            }
+        }
+        
+        function toggleDocumentsSection() {
+            const content = document.getElementById('documents-content');
+            const chevron = document.getElementById('documents-chevron');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                chevron.style.transform = 'rotate(0deg)';
+            } else {
+                content.style.display = 'none';
+                chevron.style.transform = 'rotate(-90deg)';
+            }
+        }
+
+        async function deleteDocument(documentId) {
+            if (!confirm(translations[currentLanguage]['delete_document'] + '?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/v1/documents/${documentId}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    await loadDocuments();
+                    showMessage(translations[currentLanguage]['upload_success'], 'success');
+                } else {
+                    throw new Error(result.detail || 'Delete failed');
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+                showMessage(translations[currentLanguage]['upload_error'], 'error');
+            }
+        }
+
+        function showUploadProgress(filename) {
+            showMessage(`${translations[currentLanguage]['uploading']} ${filename}`, 'info');
+        }
+
+        function showUploadSuccess(filename) {
+            showMessage(`${filename} ${translations[currentLanguage]['upload_success']}`, 'success');
+        }
+
+        function showUploadError(filename, error) {
+            showMessage(`${filename}: ${translations[currentLanguage]['upload_error']} - ${error}`, 'error');
+        }
+
+        function showMessage(message, type) {
+            // Simple toast notification system
+            const toast = document.createElement('div');
+            toast.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 ${
+                type === 'success' ? 'bg-green-500' :
+                type === 'error' ? 'bg-red-500' : 'bg-blue-500'
+            } text-white`;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString();
+        }
     </script>
 </body>
 </html>

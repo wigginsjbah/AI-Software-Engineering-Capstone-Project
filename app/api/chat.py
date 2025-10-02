@@ -29,7 +29,8 @@ async def chat_with_business_data(request: ChatRequest) -> ChatResponse:
         response = await rag_engine.process_query(
             query=request.message,
             session_id=request.session_id,
-            include_sources=request.include_sources
+            include_sources=request.include_sources,
+            language=request.language
         )
         
         return ChatResponse(

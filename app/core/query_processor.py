@@ -77,7 +77,7 @@ class QueryProcessor:
     async def _llm_analyze_query(self, query: str) -> Dict[str, Any]:
         """Use LLM to analyze query intent and requirements"""
         try:
-            system_prompt = \"\"\"You are a business intelligence query analyzer. Analyze the user's query and return a JSON response with:
+            system_prompt = """You are a business intelligence query analyzer. Analyze the user's query and return a JSON response with:
             - intent: The main intent (data_retrieval, analysis, reporting, comparison, etc.)
             - needs_database: Boolean - does this need database queries?
             - needs_analysis: Boolean - does this need analytical processing?
@@ -87,7 +87,7 @@ class QueryProcessor:
             - key_entities: Important business entities mentioned
             
             Example business tables: products, customers, orders, reviews, sales_performance
-            \"\"\"
+            """
             
             response = await self.openai_client.chat.completions.create(
                 model="gpt-4",

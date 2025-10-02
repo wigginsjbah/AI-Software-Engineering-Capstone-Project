@@ -10,7 +10,7 @@ import json
 from openai import AsyncOpenAI
 from tavily import TavilyClient
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings import OpenAIEmbeddings
+from langchain_community.embeddings import OpenAIEmbeddings
 
 from app.core.query_processor import QueryProcessor
 from app.core.context_builder import ContextBuilder
@@ -75,7 +75,8 @@ class BusinessRAGEngine:
         self, 
         query: str, 
         session_id: str = "default",
-        include_sources: bool = True
+        include_sources: bool = True,
+        language: str = "en"
     ) -> Dict[str, Any]:
         """
         Main query processing pipeline
@@ -104,7 +105,8 @@ class BusinessRAGEngine:
             response = await self.response_generator.generate_response(
                 query=query,
                 context=context,
-                query_analysis=query_analysis
+                query_analysis=query_analysis,
+                language=language
             )
             
             # Step 5: Store conversation history
