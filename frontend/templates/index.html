@@ -5,127 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Business Intelligence RAG Chatbot</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        .chat-message {
-            animation: fadeIn 0.3s ease-in;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Enhanced response formatting */
-        .response-content {
-            line-height: 1.6;
-        }
-        .response-content h1 {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #1f2937;
-            margin: 1rem 0 0.5rem 0;
-            border-bottom: 2px solid #3b82f6;
-            padding-bottom: 0.25rem;
-        }
-        .response-content h2 {
-            font-size: 1.25rem;
-            font-weight: semibold;
-            color: #374151;
-            margin: 1rem 0 0.5rem 0;
-        }
-        .response-content h3 {
-            font-size: 1.125rem;
-            font-weight: medium;
-            color: #4b5563;
-            margin: 0.75rem 0 0.25rem 0;
-        }
-        .response-content h4 {
-            font-size: 1rem;
-            font-weight: medium;
-            color: #6b7280;
-            margin: 0.5rem 0 0.25rem 0;
-        }
-        .response-content ul {
-            margin: 0.5rem 0;
-            padding-left: 1.5rem;
-        }
-        .response-content li {
-            margin: 0.25rem 0;
-        }
-        .response-content strong, .response-content **strong** {
-            font-weight: 600;
-            color: #1f2937;
-        }
-        .response-content em {
-            font-style: italic;
-            color: #6b7280;
-        }
-        .response-content code {
-            background-color: #f3f4f6;
-            padding: 0.125rem 0.25rem;
-            border-radius: 0.25rem;
-            font-family: 'Courier New', monospace;
-            font-size: 0.875rem;
-        }
-        .response-content pre {
-            background-color: #f9fafb;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            border-left: 4px solid #3b82f6;
-            margin: 0.5rem 0;
-            overflow-x: auto;
-        }
-        .response-content blockquote {
-            border-left: 4px solid #e5e7eb;
-            padding-left: 1rem;
-            margin: 0.5rem 0;
-            font-style: italic;
-            color: #6b7280;
-        }
-        
-        /* Source styling */
-        .sources-container {
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.5rem;
-            padding: 0.75rem;
-            margin-top: 0.75rem;
-        }
-        .source-item {
-            background-color: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.25rem;
-            padding: 0.5rem;
-            margin: 0.25rem 0;
-            font-size: 0.875rem;
-        }
-        
-        /* SQL query styling */
-        .sql-container {
-            background-color: #1f2937;
-            color: #f9fafb;
-            border-radius: 0.5rem;
-            padding: 1rem;
-            margin-top: 0.75rem;
-            font-family: 'Courier New', monospace;
-            overflow-x: auto;
-        }
-    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
-<body class="bg-gray-100 h-screen flex flex-col">
+<body class="gradient-bg h-screen flex flex-col overflow-hidden">
+    <!-- Floating Particles -->
+    <div id="particles-container"></div>
     <!-- Header -->
-    <div class="bg-blue-600 text-white p-4 shadow-lg">
-        <div class="flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl font-bold" data-translate="title">Business Intelligence Chatbot</h1>
-                <p class="text-blue-100" data-translate="subtitle">AI-powered insights from your business data</p>
+    <div class="header-glass bg-blue-600/80 backdrop-blur-lg border-b border-white/10 text-white p-6 shadow-2xl">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="header-content">
+                <h1 class="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-cyan-200 bg-clip-text text-transparent animate-pulse" data-translate="title">Business Intelligence Chatbot</h1>
+                <p class="text-blue-100/90 text-lg mt-2 font-light" data-translate="subtitle">AI-powered insights from your business data</p>
             </div>
             <!-- Language Toggle -->
-            <div class="flex items-center space-x-3">
-                <span class="text-sm text-blue-100" data-translate="language">Language:</span>
+            <div class="flex items-center space-x-4">
+                <span class="text-sm text-blue-100/90 font-medium" data-translate="language">Language:</span>
                 <button 
                     id="language-toggle"
                     onclick="toggleLanguage()" 
-                    class="bg-blue-500 hover:bg-blue-400 text-white px-3 py-1 rounded-lg text-sm font-semibold transition-colors duration-200 flex items-center space-x-2"
+                    class="modern-button bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center space-x-2 hover:scale-105 active:scale-95"
                 >
                     <span id="current-lang">EN</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,85 +36,85 @@
     </div>
 
     <!-- Main Chat Container -->
-    <div class="flex-1 flex overflow-hidden">
+    <div class="flex-1 flex overflow-hidden bg-white/5 backdrop-blur-sm">
         <!-- Sidebar -->
-        <div class="w-1/4 bg-white border-r border-gray-200 p-4 overflow-y-auto">
-            <h3 class="font-semibold text-gray-800 mb-4" data-translate="quick_queries">Quick Queries</h3>
-            <div class="space-y-2" id="suggestions">
-                <button class="w-full text-left p-2 bg-gray-50 hover:bg-gray-100 rounded text-sm suggestion-btn" data-translate="suggestion_1">
+        <div class="w-1/4 glass-panel border-r border-white/10 p-6 overflow-y-auto">
+            <h3 class="font-bold text-white text-lg mb-6 bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent" data-translate="quick_queries">Quick Queries</h3>
+            <div class="space-y-3" id="suggestions">
+                <button class="modern-button w-full text-left p-4 bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl text-white text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg suggestion-btn" data-translate="suggestion_1">
                     What are our top-performing products?
                 </button>
-                <button class="w-full text-left p-2 bg-gray-50 hover:bg-gray-100 rounded text-sm suggestion-btn" data-translate="suggestion_2">
+                <button class="modern-button w-full text-left p-4 bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl text-white text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg suggestion-btn" data-translate="suggestion_2">
                     Show customer sentiment analysis
                 </button>
-                <button class="w-full text-left p-2 bg-gray-50 hover:bg-gray-100 rounded text-sm suggestion-btn" data-translate="suggestion_3">
+                <button class="modern-button w-full text-left p-4 bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl text-white text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg suggestion-btn" data-translate="suggestion_3">
                     Generate sales performance report
                 </button>
-                <button class="w-full text-left p-2 bg-gray-50 hover:bg-gray-100 rounded text-sm suggestion-btn" data-translate="suggestion_4">
+                <button class="modern-button w-full text-left p-4 bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl text-white text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg suggestion-btn" data-translate="suggestion_4">
                     Which regions have highest growth?
                 </button>
             </div>
 
-            <h3 class="font-semibold text-gray-800 mb-4 mt-8" data-translate="chat_history">Chat History</h3>
-            <div id="chat-sessions" class="space-y-2">
+            <h3 class="font-bold text-white text-lg mb-6 mt-8 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent" data-translate="chat_history">Chat History</h3>
+            <div id="chat-sessions" class="space-y-3">
                 <!-- Chat sessions will be populated here -->
             </div>
 
             <!-- Document Management Section -->
-            <h3 class="font-semibold text-gray-800 mb-4 mt-8" data-translate="document_management">Your Documents</h3>
+            <h3 class="font-bold text-white text-lg mb-6 mt-8 bg-gradient-to-r from-green-300 to-blue-300 bg-clip-text text-transparent" data-translate="document_management">Your Documents</h3>
             
             <!-- Upload Area -->
         <!-- Document Management Section -->
-        <div class="bg-white border border-gray-200 rounded-lg shadow-sm">
+        <div class="glass-panel border border-white/10 rounded-xl shadow-2xl">
             <!-- Document Header -->
-            <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between cursor-pointer" 
+            <div class="px-6 py-4 border-b border-white/10 flex items-center justify-between cursor-pointer hover:bg-white/5 transition-colors duration-300 rounded-t-xl" 
                  onclick="toggleDocumentsSection()">
-                <div class="flex items-center space-x-2">
-                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex items-center space-x-3">
+                    <svg class="w-5 h-5 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
-                    <h3 class="text-lg font-semibold text-gray-800" data-translate="documents_section">Documents</h3>
-                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full" id="doc-count">0</span>
+                    <h3 class="text-lg font-bold text-white bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent" data-translate="documents_section">Documents</h3>
+                    <span class="bg-blue-400/20 text-blue-200 text-xs font-bold px-3 py-1 rounded-full border border-blue-300/30" id="doc-count">0</span>
                 </div>
-                <svg id="documents-chevron" class="w-5 h-5 text-gray-400 transform transition-transform duration-200" 
+                <svg id="documents-chevron" class="w-5 h-5 text-blue-300 transform transition-transform duration-300" 
                      fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </div>
             
             <!-- Document Content (Collapsible) -->
-            <div id="documents-content" class="p-4 space-y-4">
+            <div id="documents-content" class="p-6 space-y-4">
                 <!-- Upload Area -->
                 <div id="upload-area" 
-                     class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors cursor-pointer"
+                     class="border-2 border-dashed border-white/20 rounded-xl p-6 text-center hover:border-white/40 transition-all duration-300 cursor-pointer bg-white/5 hover:bg-white/10 backdrop-blur-sm"
                      ondrop="handleDrop(event)" 
                      ondragover="handleDragOver(event)" 
                      ondragleave="handleDragLeave(event)">
-                    <div class="space-y-2">
-                        <svg class="mx-auto h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="space-y-3">
+                        <svg class="mx-auto h-10 w-10 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                         </svg>
-                        <p class="text-sm text-gray-600 mb-2" data-translate="upload_instruction">Upload business documents</p>
+                        <p class="text-sm text-blue-200 mb-3 font-medium" data-translate="upload_instruction">Upload business documents</p>
                         <input type="file" id="document-upload" class="hidden" accept=".txt,.md,.pdf,.docx,.doc,.html,.htm" multiple>
-                        <button onclick="document.getElementById('document-upload').click()" class="text-blue-600 hover:text-blue-800 text-sm font-medium" data-translate="choose_files">
+                        <button onclick="document.getElementById('document-upload').click()" class="modern-button bg-blue-500/20 hover:bg-blue-400/30 border border-blue-400/30 text-blue-200 px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 hover:scale-105" data-translate="choose_files">
                             Choose Files
                         </button>
-                        <p class="text-xs text-gray-500" data-translate="supported_formats">
+                        <p class="text-xs text-blue-300/70 mt-2" data-translate="supported_formats">
                             Supports: PDF, Word, Text, Markdown, HTML
                         </p>
                     </div>
                 </div>
 
                 <!-- Document List -->
-                <div class="space-y-2" id="document-list">
-                    <div class="text-sm text-gray-500 text-center py-4" id="no-documents" data-translate="no_documents">
+                <div class="space-y-3" id="document-list">
+                    <div class="text-sm text-white/60 text-center py-6 bg-white/5 rounded-xl border border-white/10" id="no-documents" data-translate="no_documents">
                         No documents uploaded yet
                     </div>
                 </div>
 
                 <!-- Document Statistics -->
-                <div class="mt-4 p-3 bg-gray-50 rounded-lg" id="document-stats" style="display: none;">
+                <div class="mt-6 p-4 glass-panel rounded-xl border border-white/10" id="document-stats" style="display: none;">
                     <h4 class="font-medium text-gray-700 mb-2" data-translate="document_stats">Document Statistics</h4>
                     <div class="text-xs text-gray-600 space-y-1">
                         <div>Total: <span id="total-docs">0</span> documents</div>
@@ -224,38 +123,24 @@
                     </div>
                 </div>
             </div>
-        </div>            <!-- Document List -->
-            <div class="space-y-2" id="document-list">
-                <div class="text-sm text-gray-500 text-center py-2" id="no-documents" data-translate="no_documents">
-                    No documents uploaded yet
-                </div>
-            </div>
-
-            <!-- Document Statistics -->
-            <div class="mt-4 p-3 bg-gray-50 rounded-lg" id="document-stats" style="display: none;">
-                <h4 class="font-medium text-gray-700 mb-2" data-translate="document_stats">Document Statistics</h4>
-                <div class="text-xs text-gray-600 space-y-1">
-                    <div>Total: <span id="total-docs">0</span> documents</div>
-                    <div>Size: <span id="total-size">0 MB</span></div>
-                </div>
-            </div>
+        </div>
         </div>
 
         <!-- Chat Area -->
-        <div class="flex-1 flex flex-col">
+        <div class="flex-1 flex flex-col bg-white/5 backdrop-blur-sm">
             <!-- Messages Container -->
-            <div class="flex-1 overflow-y-auto p-4" id="messages-container">
-                <div class="space-y-4" id="messages">
+            <div class="flex-1 overflow-y-auto p-6" id="messages-container">
+                <div class="space-y-6" id="messages">
                     <!-- Welcome message -->
                     <div class="chat-message">
-                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                            <div class="flex items-center mb-2">
-                                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold mr-3">
+                        <div class="glass-panel border border-blue-400/30 rounded-xl p-6 shadow-2xl">
+                            <div class="flex items-center mb-4">
+                                <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-bold mr-4 shadow-lg">
                                     AI
                                 </div>
-                                <span class="font-semibold text-gray-800">Business Intelligence Assistant</span>
+                                <span class="font-bold text-white text-lg bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent">Business Intelligence Assistant</span>
                             </div>
-                            <p class="text-gray-700" data-translate="welcome_message">
+                            <p class="text-blue-100 leading-relaxed" data-translate="welcome_message">
                                 Hello! I'm your business intelligence assistant. I can help you analyze your business data, 
                                 generate reports, and provide insights. Ask me about products, customers, sales, reviews, 
                                 or any business metrics you'd like to explore.
@@ -266,31 +151,34 @@
             </div>
 
             <!-- Input Area -->
-            <div class="border-t border-gray-200 p-4 bg-white">
+            <div class="border-t border-white/10 p-6 glass-panel">
                 <div class="flex space-x-4">
                     <input 
                         type="text" 
                         id="message-input" 
                         data-translate-placeholder="input_placeholder"
                         placeholder="Ask about your business data..."
-                        class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        class="flex-1 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-6 py-4 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all duration-300"
                         onkeypress="handleKeyPress(event)"
                     >
                     <button 
                         id="send-button"
                         onclick="sendMessage()" 
-                        class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        class="modern-button bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white px-8 py-4 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95"
                         data-translate="send_button"
                     >
                         Send
                     </button>
                 </div>
-                <div class="mt-2 flex items-center space-x-4 text-sm text-gray-500">
-                    <label class="flex items-center">
-                        <input type="checkbox" id="include-sources" checked class="mr-1">
+                <div class="mt-4 flex items-center space-x-6 text-sm text-white/70">
+                    <label class="flex items-center cursor-pointer hover:text-white transition-colors duration-200">
+                        <input type="checkbox" id="include-sources" checked class="mr-2 accent-blue-400">
                         <span data-translate="include_sources">Include sources</span>
                     </label>
-                    <span id="status-indicator" class="text-green-500">● <span data-translate="status_online">Online</span></span>
+                    <span id="status-indicator" class="text-green-400 flex items-center">
+                        <span class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                        <span data-translate="status_online">Online</span>
+                    </span>
                 </div>
             </div>
         </div>
@@ -934,6 +822,61 @@
         function formatDate(dateString) {
             const date = new Date(dateString);
             return date.toLocaleDateString();
+        }
+
+        // Floating Particles System
+        function createParticles() {
+            const container = document.getElementById('particles-container');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Initialize particles when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+        });
+
+        // Typing indicator
+        function showTypingIndicator() {
+            const typing = document.createElement('div');
+            typing.id = 'typing-indicator';
+            typing.className = 'chat-message';
+            typing.innerHTML = `
+                <div class="glass-panel border border-white/20 rounded-xl p-4 max-w-xs">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-bold">
+                            AI
+                        </div>
+                        <div class="typing-dots">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('messages').appendChild(typing);
+            scrollToBottom();
+        }
+
+        function hideTypingIndicator() {
+            const typing = document.getElementById('typing-indicator');
+            if (typing) {
+                typing.remove();
+            }
+        }
+
+        function scrollToBottom() {
+            const container = document.getElementById('messages-container');
+            container.scrollTop = container.scrollHeight;
         }
     </script>
 </body>
