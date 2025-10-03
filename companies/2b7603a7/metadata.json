@@ -1,0 +1,15 @@
+{
+  "id": "2b7603a7",
+  "name": "Janelle's Jellybeans",
+  "description": "This is a business that sells jellybeans and various other candies.",
+  "business_type": "retail",
+  "complexity": "simple",
+  "database_path": "companies\\2b7603a7\\business_data.db",
+  "created_at": "2025-10-03T10:46:11.059714",
+  "data_stats": {
+    "products": 61,
+    "customers": 800,
+    "reviews": 473
+  },
+  "generation_type": "enhanced_ai"
+}

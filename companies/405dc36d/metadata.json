@@ -1,0 +1,15 @@
+{
+  "id": "405dc36d",
+  "name": "Janelle's Jellybeans",
+  "description": "This is a large corporation that sells jellybeans and various other types of candies.",
+  "business_type": "retail",
+  "complexity": "simple",
+  "database_path": "companies\\405dc36d\\business_data.db",
+  "created_at": "2025-10-03T10:40:39.376418",
+  "data_stats": {
+    "products": 59,
+    "customers": 800,
+    "reviews": 519
+  },
+  "generation_type": "enhanced_ai"
+}

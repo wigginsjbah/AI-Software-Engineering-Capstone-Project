@@ -13,13 +13,29 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(-45deg, #667eea, #764ba2, #6c7ce0, #8b7ec8);
+            background-size: 400% 400%;
+            animation: gradientShift 70s ease infinite;
             min-height: 100vh;
             color: #333;
         }
 
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(-45deg, #667eea, #764ba2, #6c7ce0, #8b7ec8);
+            background-size: 400% 400%;
+            animation: gradientShift 70s ease infinite;
             color: white;
             padding: 20px 0;
             text-align: center;
@@ -60,30 +76,37 @@
             transform: translateY(-1px);
         }
 
+        .nav-link.active {
+            background: rgba(255,255,255,0.95);
+            color: #333;
+        }
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 30px 20px;
         }
 
         .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-top: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .section {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
         }
 
         .section-title {
             font-size: 1.8em;
-            color: #333;
             margin-bottom: 20px;
+            color: #333;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -202,24 +225,24 @@
 
         .company-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
         }
 
         .company-card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            border: 2px solid transparent;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
+            border: 1px solid #e0e0e0;
             position: relative;
         }
 
         .company-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
 
         .company-card.active {
@@ -230,52 +253,55 @@
         .company-card.active::before {
             content: "ACTIVE";
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 15px;
+            right: 15px;
             background: #28a745;
             color: white;
-            padding: 2px 8px;
+            padding: 4px 12px;
             border-radius: 12px;
             font-size: 0.7em;
             font-weight: bold;
         }
 
         .company-name {
-            font-size: 1.2em;
-            font-weight: bold;
+            font-size: 1.3em;
+            font-weight: 600;
             color: #333;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         .company-meta {
-            margin: 10px 0;
+            margin: 15px 0;
             font-size: 0.9em;
         }
 
         .meta-row {
             display: flex;
             justify-content: space-between;
-            margin: 5px 0;
+            margin: 8px 0;
+            align-items: center;
         }
 
         .business-type-badge {
             background: #e3f2fd;
             color: #1565c0;
-            padding: 2px 8px;
-            border-radius: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
             font-size: 0.8em;
+            font-weight: 500;
         }
 
         .company-actions {
-            margin-top: 15px;
+            margin-top: 20px;
             display: flex;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
         .company-actions .btn {
-            padding: 8px 16px;
+            padding: 10px 18px;
             font-size: 0.85em;
+            border-radius: 6px;
         }
 
         .loading {
@@ -300,6 +326,47 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* Toolbar Styles */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* Empty State Styles */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 15px;
+            color: #333;
         }
 
         .error {
@@ -399,8 +466,357 @@
             border-radius: 4px;
             padding: 8px 16px;
             cursor: pointer;
-            font-size: 0.9em;
             margin-top: 10px;
+        }
+
+        /* Generation Method Toggle Styles - Horizontal and Centered */
+        .generation-method-toggle {
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            background: none;
+            border: none;
+            backdrop-filter: none;
+        }
+
+        .toggle-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px 40px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .toggle-label {
+            color: white;
+            font-weight: 600;
+            font-size: 1.2em;
+            white-space: nowrap;
+        }
+
+        .toggle-switch {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .toggle-switch input[type="radio"] {
+            display: none;
+        }
+
+        .toggle-switch label {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 15px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+            font-size: 1.1em;
+        }
+
+        .toggle-switch label:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.95);
+            transform: translateY(-2px);
+        }
+
+        .toggle-switch input[type="radio"]:checked + label {
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Generation Form Styles */
+        .generation-form {
+            display: none;
+        }
+
+        .generation-form.active {
+            display: block;
+        }
+
+        /* Upload Area Styles */
+        .upload-area {
+            border: 3px dashed #ccc;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            background: #f9f9f9;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .upload-area.dragover {
+            border-color: #667eea;
+            background: #e3f2fd;
+            transform: scale(1.02);
+        }
+
+        .upload-content {
+            pointer-events: none;
+        }
+
+        .upload-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .upload-content h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .upload-content p {
+            color: #666;
+            margin: 0;
+        }
+
+        .upload-browse {
+            color: #667eea;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
+        #fileInput {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* File Preview Styles */
+        .file-preview {
+            margin-top: 20px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .file-item:hover {
+            background: #e9ecef;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .file-icon {
+            font-size: 1.5em;
+        }
+
+        .file-details h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+
+        .file-details p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .file-remove {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: all 0.3s ease;
+        }
+
+        .file-remove:hover {
+            background: #c82333;
+        }
+
+        /* Upload Info Boxes */
+        .upload-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-box h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .info-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .info-box li {
+            color: #444;
+            margin-bottom: 8px;
+            padding-left: 0;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        /* Processing Options */
+        .processing-options {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 10px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .option-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .option-item input[type="checkbox"] {
+            width: auto;
+            transform: scale(1.2);
+        }
+
+        .option-item label {
+            margin: 0;
+            color: #333;
+            cursor: pointer;
+        }
+
+        /* Small Data Source Toggle */
+        .data-source-toggle {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .small-toggle-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px 25px;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .small-toggle-label {
+            color: #333;
+            font-weight: 600;
+            font-size: 1em;
+            white-space: nowrap;
+        }
+
+        .small-toggle-switch {
+            display: flex;
+            gap: 15px;
+        }
+
+        .small-toggle-switch input[type="radio"] {
+            display: none;
+        }
+
+        .small-toggle-switch label {
+            background: rgba(255, 255, 255, 0.8);
+            color: #666;
+            padding: 10px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            font-size: 0.9em;
+        }
+
+        .small-toggle-switch label:hover {
+            background: rgba(255, 255, 255, 1);
+            color: #333;
+        }
+
+        .small-toggle-switch input[type="radio"]:checked + label {
+            background: #667eea;
+            color: white;
+            border-color: #5a6fd8;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Page Section Styles */
+        .page-section {
+            display: none;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .upload-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab-navigation {
+                flex-direction: column;
+            }
         }
 
         .preview-section {
@@ -481,113 +897,147 @@
 </head>
 <body>
     <div class="header">
-        <h1>🏢 Company & Database Manager</h1>
-        <p>Create and manage companies with AI-powered database generation</p>
+        <h1 data-translate="page_title">🗄️ Database Management</h1>
+        <p data-translate="page_subtitle">Create companies and generate or upload business databases</p>
         <div class="header-nav">
-            <a href="/" class="nav-link">🏠 Chat Interface</a>
-            <a href="/companies" class="nav-link">🏢 Companies</a>
+            <a href="/" class="nav-link" data-translate="chat_interface">Chat Interface</a>
+            <a href="/companies" class="nav-link" data-translate="companies">Companies</a>
+            <a href="/databases" class="nav-link active" data-translate="databases">Databases</a>
+            
+            <!-- Language Toggle -->
+            <div style="display: inline-flex; align-items: center; margin-left: 20px;">
+                <span style="color: rgba(255,255,255,0.9); font-size: 0.9rem; margin-right: 8px;" data-translate="language">Language:</span>
+                <button 
+                    id="language-toggle"
+                    onclick="toggleLanguage()" 
+                    style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); 
+                           border-radius: 6px; color: white; padding: 5px 10px; font-size: 0.8rem; 
+                           cursor: pointer; transition: all 0.3s ease;"
+                    onmouseover="this.style.background='rgba(255,255,255,0.3)'"
+                    onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                    <span id="current-lang">EN</span>
+                </button>
+            </div>
         </div>
     </div>
 
     <div class="container">
         <div class="main-content">
-            <!-- Company Creation & Database Generation Section -->
+            <!-- Company Creation Section -->
             <div class="section">
-                <h2 class="section-title">
-                    🚀 Create New Company
-                </h2>
+                <h2 class="section-title" data-translate="create_section_title">🏢 Create New Company & Database</h2>
+                
+                <!-- Data Source Toggle -->
+                <div class="data-source-toggle">
+                    <div class="small-toggle-container">
+                        <span class="small-toggle-label" data-translate="data_source_label">Data Source:</span>
+                        <div class="small-toggle-switch">
+                            <input type="radio" id="aiGenerated" name="dataSource" value="ai" checked>
+                            <label for="aiGenerated">
+                                <span data-translate="ai_generated">AI Generated</span>
+                            </label>
+                            <input type="radio" id="uploadFiles" name="dataSource" value="upload">
+                            <label for="uploadFiles">
+                                <span data-translate="upload_files">Upload Files</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Generation Form -->
+                <div id="ai-generation-form" class="generation-form active">
                 
                 <form id="companyForm">
                     <!-- Basic Company Information -->
                     <div class="form-group">
-                        <label for="companyName">Company Name *</label>
+                        <label for="companyName" data-translate="company_name_label">Company Name *</label>
                         <input type="text" id="companyName" name="companyName" required 
-                               placeholder="Enter your company name">
+                               data-translate-placeholder="company_name_placeholder">
                     </div>
 
                     <div class="form-group">
-                        <label for="companyDescription">Company Description *</label>
+                        <label for="companyDescription" data-translate="description_label">Company Description *</label>
                         <textarea id="companyDescription" name="companyDescription" required 
-                                  placeholder="Describe your business, products, services, and target market in detail..."></textarea>
+                                  data-translate-placeholder="description_placeholder"></textarea>
                     </div>
 
                     <!-- Business Type Selection -->
                     <div class="form-group">
-                        <label>Business Type *</label>
+                        <label data-translate="business_type_label">Business Type *</label>
                         <div class="business-type-grid">
                             <div class="business-type-option" data-type="retail">
-                                <h4>🛒 Retail</h4>
-                                <p>E-commerce, stores, products, customers</p>
+                                <h4 data-translate="retail_title">🛍️ Retail</h4>
+                                <p data-translate="retail_desc">E-commerce, stores, products, customers</p>
                             </div>
                             <div class="business-type-option" data-type="healthcare">
-                                <h4>🏥 Healthcare</h4>
-                                <p>Patients, treatments, medical records</p>
+                                <h4 data-translate="healthcare_title">🏥 Healthcare</h4>
+                                <p data-translate="healthcare_desc">Patients, treatments, medical records</p>
                             </div>
                             <div class="business-type-option" data-type="finance">
-                                <h4>💰 Finance</h4>
-                                <p>Accounts, transactions, investments</p>
+                                <h4 data-translate="finance_title">💰 Finance</h4>
+                                <p data-translate="finance_desc">Accounts, transactions, investments</p>
                             </div>
                             <div class="business-type-option" data-type="education">
-                                <h4>🎓 Education</h4>
-                                <p>Students, courses, grades, schools</p>
+                                <h4 data-translate="education_title">🎓 Education</h4>
+                                <p data-translate="education_desc">Students, courses, grades, schools</p>
                             </div>
                             <div class="business-type-option" data-type="manufacturing">
-                                <h4>🏭 Manufacturing</h4>
-                                <p>Production, inventory, supply chain</p>
+                                <h4 data-translate="manufacturing_title">🏭 Manufacturing</h4>
+                                <p data-translate="manufacturing_desc">Production, inventory, supply chain</p>
                             </div>
                             <div class="business-type-option" data-type="ecommerce">
-                                <h4>🛍️ E-commerce</h4>
-                                <p>Online sales, digital marketplace</p>
+                                <h4 data-translate="ecommerce_title">🛒 E-commerce</h4>
+                                <p data-translate="ecommerce_desc">Online sales, digital marketplace</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Advanced Database Options -->
                     <div class="advanced-options">
-                        <h4>🔧 Database Configuration</h4>
+                        <h4 data-translate="database_config_title">🔧 Database Configuration</h4>
                         
                         <div class="form-group">
-                            <label>Database Complexity</label>
+                            <label data-translate="complexity_label">Database Complexity</label>
                             <div class="complexity-options">
                                 <div class="complexity-option selected" data-complexity="simple">
-                                    <h5>Simple</h5>
-                                    <p>Basic tables, ideal for MVPs</p>
+                                    <h5 data-translate="simple_title">Simple</h5>
+                                    <p data-translate="simple_desc">Basic tables, ideal for MVPs</p>
                                 </div>
                                 <div class="complexity-option" data-complexity="medium">
-                                    <h5>Medium</h5>
-                                    <p>Standard business logic</p>
+                                    <h5 data-translate="medium_title">Medium</h5>
+                                    <p data-translate="medium_desc">Standard business logic</p>
                                 </div>
                                 <div class="complexity-option" data-complexity="complex">
-                                    <h5>Complex</h5>
-                                    <p>Advanced relationships & features</p>
+                                    <h5 data-translate="complex_title">Complex</h5>
+                                    <p data-translate="complex_desc">Advanced relationships & features</p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label>Specific Requirements (Optional)</label>
+                            <label data-translate="specific_requirements_label">Specific Requirements (Optional)</label>
                             <div class="requirements-list" id="requirementsList">
                                 <div class="requirement-item">
-                                    <input type="text" placeholder="e.g., Multi-tenant architecture, audit logging, etc.">
-                                    <button type="button" class="remove-requirement" onclick="removeRequirement(this)">Remove</button>
+                                    <input type="text" data-translate-placeholder="requirements_placeholder" placeholder="e.g., Multi-tenant architecture, audit logging, etc.">
+                                    <button type="button" class="remove-requirement" onclick="removeRequirement(this)" data-translate="remove_button">Remove</button>
                                 </div>
                             </div>
-                            <button type="button" class="add-requirement" onclick="addRequirement()">+ Add Requirement</button>
+                            <button type="button" class="add-requirement" onclick="addRequirement()" data-translate="add_requirement_button">+ Add Requirement</button>
                         </div>
 
                         <div class="form-group">
-                            <label for="additionalContext">Additional Context (Optional)</label>
+                            <label for="additionalContext" data-translate="additional_context_label">Additional Context (Optional)</label>
                             <textarea id="additionalContext" name="additionalContext" 
-                                      placeholder="Any additional information about your business logic, special requirements, or preferences..."></textarea>
+                                      data-translate-placeholder="additional_context_placeholder" placeholder="Any additional information about your business logic, special requirements, or preferences..."></textarea>
                         </div>
                     </div>
 
                     <!-- Action Buttons -->
                     <div style="margin-top: 30px; display: flex; gap: 15px; flex-wrap: wrap;">
-                        <button type="button" class="btn btn-secondary" onclick="previewSchema()">
+                        <button type="button" class="btn btn-secondary" onclick="previewSchema()" data-translate="preview_schema_button">
                             🔍 Preview Schema
                         </button>
-                        <button type="submit" class="btn btn-success">
+                        <button type="submit" class="btn btn-success" data-translate="create_database_button">
                             🚀 Create Company & Generate Database
                         </button>
                     </div>
@@ -596,32 +1046,113 @@
                 <!-- Preview/Results Section -->
                 <div class="preview-section" id="previewSection">
                     <div class="info">
-                        <strong>💡 How it works:</strong><br>
-                        1. Fill in your company details and select business type<br>
-                        2. Preview the AI-generated database schema (optional)<br>
-                        3. Create your company with a fully functional database<br>
-                        4. Start chatting with your business data immediately!
+                        <strong data-translate="how_it_works_title">💡 How it works:</strong>
+                        <ol>
+                            <li data-translate="how_it_works_step1">Fill in your company details and select business type</li>
+                            <li data-translate="how_it_works_step2">Preview the AI-generated database schema (optional)</li>
+                            <li data-translate="how_it_works_step3">Create your company with a fully functional database</li>
+                            <li data-translate="how_it_works_step4">Start chatting with your business data immediately!</li>
+                        </ol>
                     </div>
                 </div>
-            </div>
-
-            <!-- Existing Companies Section -->
-            <div class="section">
-                <h2 class="section-title">
-                    📋 Your Companies
-                </h2>
-                
-                <div id="companiesContainer">
-                    <div class="loading">
-                        <div class="spinner"></div>
-                        <p>Loading companies...</p>
-                    </div>
                 </div>
 
-                <div style="margin-top: 20px;">
-                    <button class="btn btn-secondary" onclick="loadCompanies()">
-                        🔄 Refresh Companies
-                    </button>
+                <!-- Manual Upload Form -->
+                <div id="upload-generation-form" class="generation-form">
+                    <div class="upload-info">
+                        <div class="info-box">
+                            <h4>🎯 Supported Formats</h4>
+                            <ul>
+                                <li>📊 <strong>Excel Files:</strong> .xlsx, .xls (Multiple sheets supported)</li>
+                                <li>📄 <strong>CSV Files:</strong> .csv (Comma-separated values)</li>
+                                <li>💾 <strong>Database Files:</strong> .sqlite, .db</li>
+                                <li>📄 <strong>JSON Files:</strong> .json (Structured data)</li>
+                                <li>📋 <strong>Text Files:</strong> .txt (Tab-delimited)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="info-box">
+                            <h4>💡 Tips for Best Results</h4>
+                            <ul>
+                                <li>Include column headers for better data recognition</li>
+                                <li>Ensure consistent data formats (dates, numbers)</li>
+                                <li>Multiple files will be automatically linked when possible</li>
+                                <li>Large files (>50MB) may take longer to process</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <form id="uploadForm" enctype="multipart/form-data">
+                        <!-- Basic Company Information -->
+                        <div class="form-group">
+                            <label for="uploadCompanyName" data-translate="company_name_label">Company Name *</label>
+                            <input type="text" id="uploadCompanyName" name="companyName" required 
+                                   data-translate-placeholder="company_name_placeholder">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="uploadCompanyDescription" data-translate="description_label">Company Description *</label>
+                            <textarea id="uploadCompanyDescription" name="companyDescription" required 
+                                      data-translate-placeholder="description_placeholder"></textarea>
+                        </div>
+
+                        <!-- File Upload Section -->
+                        <div class="form-group">
+                            <label data-translate="upload_files_label">📁 Upload Your Data Files</label>
+                            <div class="upload-area" id="uploadArea">
+                                <div class="upload-content">
+                                    <div class="upload-icon">📤</div>
+                                    <h3 data-translate="drag_drop_title">Drag & Drop Files Here</h3>
+                                    <p><span data-translate="upload_or_text">or</span> <span class="upload-browse" data-translate="upload_browse_text">click to browse</span></p>
+                                    <input type="file" id="fileInput" name="files" multiple 
+                                           accept=".xlsx,.xls,.csv,.sqlite,.db,.json,.txt">
+                                </div>
+                            </div>
+                            
+                            <!-- File Preview -->
+                            <div id="filePreview" class="file-preview"></div>
+                        </div>
+
+                        <!-- Data Processing Options -->
+                        <div class="form-group">
+                            <label data-translate="processing_options_label">⚙️ Processing Options</label>
+                            <div class="processing-options">
+                                <div class="option-item">
+                                    <input type="checkbox" id="autoDetectRelations" checked>
+                                    <label for="autoDetectRelations" data-translate="auto_detect_label">Auto-detect relationships between tables</label>
+                                </div>
+                                <div class="option-item">
+                                    <input type="checkbox" id="normalizeData" checked>
+                                    <label for="normalizeData" data-translate="normalize_data_label">Normalize data formats (dates, numbers)</label>
+                                </div>
+                                <div class="option-item">
+                                    <input type="checkbox" id="createIndexes" checked>
+                                    <label for="createIndexes" data-translate="create_indexes_label">Create database indexes for better performance</label>
+                                </div>
+                                <div class="option-item">
+                                    <input type="checkbox" id="validateData">
+                                    <label for="validateData" data-translate="validate_data_label">Validate data integrity (slower but more reliable)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div style="margin-top: 30px; display: flex; gap: 15px; flex-wrap: wrap;">
+                            <button type="button" class="btn btn-secondary" onclick="previewUploadedData()" 
+                                    id="previewUploadBtn" disabled data-translate="preview_data_button">
+                                🔍 Preview Data
+                            </button>
+                            <button type="submit" class="btn btn-success" id="uploadSubmitBtn" disabled data-translate="create_from_upload_button">
+                                📁 Create Company from Upload
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Upload Preview Section -->
+                    <div class="preview-section" id="uploadPreviewSection" style="display: none;">
+                        <h4 data-translate="data_preview_title">📊 Data Preview</h4>
+                        <div id="uploadPreviewContent"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -637,7 +1168,6 @@
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
             setupEventListeners();
-            loadCompanies();
         });
 
         function setupEventListeners() {
@@ -666,6 +1196,329 @@
                 e.preventDefault();
                 await createCompanyWithDatabase();
             });
+
+            // Upload form submission
+            document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                await createCompanyFromUpload();
+            });
+
+            // Data source toggle handlers
+            setupDataSourceToggle();
+
+            // File upload handlers
+            setupFileUpload();
+        }
+
+        // Data Source Toggle Functions
+        function setupDataSourceToggle() {
+            const toggleRadios = document.querySelectorAll('input[name="dataSource"]');
+            
+            toggleRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    switchDataSource(this.value);
+                });
+            });
+        }
+
+        function switchDataSource(source) {
+            // Hide all forms
+            document.querySelectorAll('.generation-form').forEach(form => {
+                form.classList.remove('active');
+            });
+            
+            // Show selected form
+            if (source === 'ai') {
+                document.getElementById('ai-generation-form').classList.add('active');
+            } else if (source === 'upload') {
+                document.getElementById('upload-generation-form').classList.add('active');
+            }
+        }
+
+        // Global helper functions for file handling
+        function getFileIcon(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            const icons = {
+                'xlsx': '📊', 'xls': '📊',
+                'csv': '📄', 'txt': '📄',
+                'sqlite': '💾', 'db': '💾',
+                'json': '🗂️'
+            };
+            return icons[ext] || '📁';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // File Upload Functions
+        function setupFileUpload() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const filePreview = document.getElementById('filePreview');
+            const previewBtn = document.getElementById('previewUploadBtn');
+            const submitBtn = document.getElementById('uploadSubmitBtn');
+            
+            let uploadedFiles = [];
+
+            // Drag and drop handlers
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+
+            // Click to open file dialog
+            uploadArea.addEventListener('click', (e) => {
+                e.preventDefault();
+                fileInput.click();
+            });
+
+            // File input change handler
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+            });
+
+            function handleFiles(files) {
+                Array.from(files).forEach(file => {
+                    if (validateFile(file)) {
+                        uploadedFiles.push(file);
+                    }
+                });
+                displayFiles();
+                updateButtons();
+            }
+
+            function validateFile(file) {
+                const allowedTypes = [
+                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+                    'application/vnd.ms-excel', // .xls
+                    'text/csv', // .csv
+                    'application/vnd.sqlite3', // .sqlite
+                    'application/x-sqlite3', // .db
+                    'application/json', // .json
+                    'text/plain' // .txt
+                ];
+
+                const maxSize = 100 * 1024 * 1024; // 100MB
+
+                if (!allowedTypes.includes(file.type) && !file.name.match(/\.(xlsx|xls|csv|sqlite|db|json|txt)$/i)) {
+                    alert(`File type not supported: ${file.name}`);
+                    return false;
+                }
+
+                if (file.size > maxSize) {
+                    alert(`File too large: ${file.name}. Maximum size is 100MB.`);
+                    return false;
+                }
+
+                return true;
+            }
+
+            function displayFiles() {
+                filePreview.innerHTML = '';
+                uploadedFiles.forEach((file, index) => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    
+                    const fileIcon = getFileIcon(file.name);
+                    const fileSize = formatFileSize(file.size);
+                    
+                    fileItem.innerHTML = `
+                        <div class="file-info">
+                            <div class="file-icon">${fileIcon}</div>
+                            <div class="file-details">
+                                <h4>${file.name}</h4>
+                                <p>${fileSize} • ${file.type || 'Unknown type'}</p>
+                            </div>
+                        </div>
+                        <div class="file-actions">
+                            <button type="button" class="file-remove" onclick="removeFile(${index})">
+                                Remove
+                            </button>
+                        </div>
+                    `;
+                    
+                    filePreview.appendChild(fileItem);
+                });
+            }
+
+            function updateButtons() {
+                const hasFiles = uploadedFiles.length > 0;
+                previewBtn.disabled = !hasFiles;
+                submitBtn.disabled = !hasFiles;
+            }
+
+            // Make removeFile globally accessible
+            window.removeFile = function(index) {
+                uploadedFiles.splice(index, 1);
+                displayFiles();
+                updateButtons();
+            };
+
+            // Make uploadedFiles accessible globally
+            window.getUploadedFiles = function() {
+                return uploadedFiles;
+            };
+        }
+
+        // Preview uploaded data
+        async function previewUploadedData() {
+            const files = window.getUploadedFiles();
+            if (files.length === 0) return;
+
+            const previewSection = document.getElementById('uploadPreviewSection');
+            const previewContent = document.getElementById('uploadPreviewContent');
+            
+            if (!previewSection || !previewContent) {
+                console.error('Upload preview elements not found');
+                alert('Upload preview elements not found. Please reload the page.');
+                return;
+            }
+            
+            previewContent.innerHTML = '<div class="loading"><div class="spinner"></div><p>Analyzing uploaded files...</p></div>';
+            previewSection.style.display = 'block';
+
+            try {
+                // For now, just show file information
+                // In a real implementation, this would send files to backend for analysis
+                let previewHtml = '<div class="upload-analysis">';
+                previewHtml += '<h5>📋 File Analysis Summary</h5>';
+                
+                files.forEach((file, index) => {
+                    previewHtml += `
+                        <div class="analysis-item">
+                            <h6>${getFileIcon(file.name)} ${file.name}</h6>
+                            <p>Size: ${formatFileSize(file.size)}</p>
+                            <p>Type: ${file.type || 'Unknown'}</p>
+                            <p>Status: Ready for processing</p>
+                        </div>
+                    `;
+                });
+                
+                previewHtml += '</div>';
+                previewContent.innerHTML = previewHtml;
+
+            } catch (error) {
+                previewContent.innerHTML = `<div class="error">Error analyzing files: ${error.message}</div>`;
+            }
+        }
+
+        // Create company from uploaded files
+        async function createCompanyFromUpload() {
+            const companyNameElement = document.getElementById('uploadCompanyName');
+            const companyDescElement = document.getElementById('uploadCompanyDescription');
+            
+            if (!companyNameElement || !companyDescElement) {
+                showPreview('error', 'Required form fields not found', 'previewSection');
+                return;
+            }
+            
+            const companyName = companyNameElement.value;
+            const companyDescription = companyDescElement.value;
+            const files = window.getUploadedFiles();
+
+            if (!companyName || !companyDescription || files.length === 0) {
+                alert('Please fill in all required fields and upload at least one file.');
+                return;
+            }
+
+            const submitBtn = document.getElementById('uploadSubmitBtn');
+            if (!submitBtn) {
+                showPreview('error', 'Submit button not found', 'previewSection');
+                return;
+            }
+            
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '⏳ Creating Company...';
+            submitBtn.disabled = true;
+
+            try {
+                // Create FormData for file upload
+                const formData = new FormData();
+                formData.append('company_name', companyName);
+                formData.append('company_description', companyDescription);
+                formData.append('business_type', 'custom'); // Mark as custom upload
+                
+                // Processing options with null checks
+                const autoDetectElement = document.getElementById('autoDetectRelations');
+                const normalizeElement = document.getElementById('normalizeData');
+                const createIndexesElement = document.getElementById('createIndexes');
+                const validateElement = document.getElementById('validateData');
+                
+                formData.append('auto_detect_relations', autoDetectElement ? autoDetectElement.checked : false);
+                formData.append('normalize_data', normalizeElement ? normalizeElement.checked : false);
+                formData.append('create_indexes', createIndexesElement ? createIndexesElement.checked : false);
+                formData.append('validate_data', validateElement ? validateElement.checked : false);
+
+                // Add all files
+                files.forEach((file) => {
+                    formData.append('files', file);  // Use 'files' as the parameter name
+                });
+
+                const response = await fetch('/api/companies/create-from-upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showUploadMessage('success', `✅ Company "${companyName}" created successfully from uploaded files!`);
+                    
+                    // Clear form with null checks
+                    const uploadForm = document.getElementById('uploadForm');
+                    const filePreview = document.getElementById('filePreview');
+                    
+                    if (uploadForm) uploadForm.reset();
+                    if (filePreview) filePreview.innerHTML = '';
+                    
+                    // Switch back to AI generation
+                    const aiRadio = document.getElementById('aiGenerated');
+                    if (aiRadio) {
+                        aiRadio.checked = true;
+                        switchDataSource('ai');
+                    }
+                    
+                    // Reload companies list
+                    await loadCompanies();
+                } else {
+                    const errorMessage = result.error || result.detail || 'Unknown server error';
+                    throw new Error(errorMessage);
+                }
+
+            } catch (error) {
+                console.error('Upload error:', error);
+                let errorMessage = error.message;
+                
+                // Handle specific error types
+                if (error.message.includes('Failed to fetch')) {
+                    errorMessage = 'Cannot connect to server. Please make sure the server is running.';
+                } else if (error.message.includes('413') || error.message.includes('too large')) {
+                    errorMessage = 'File too large. Please try smaller files or fewer files.';
+                } else if (error.message.includes('422')) {
+                    errorMessage = 'Invalid file format or data. Please check your files and try again.';
+                }
+                
+                showUploadMessage('error', errorMessage);
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
         }
 
         // Helper function for fetch with timeout
@@ -738,74 +1591,101 @@
         async function createCompanyWithDatabase() {
             if (!validateForm()) return;
 
-            showPreview('loading', 'Creating company and generating database...<br><small>This may take 2-3 minutes. Please be patient...</small>');
+            showPreview('loading', 'Creating company with enhanced database generation...<br><small>This may take 3-5 minutes for comprehensive data. Please be patient...</small>', 'previewSection');
 
             try {
-                // Step 1: Generate the database
-                const formData = getFormData();
-                const dbResponse = await fetchWithTimeout('/api/v1/database/generate/full', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                }, 180000);
-
-                const dbResult = await dbResponse.json();
-
-                if (!dbResult.success) {
-                    handleApiError(dbResult, 'database generation');
+                // Get form data with null checks
+                const formData = new FormData();
+                const companyNameElement = document.getElementById('companyName');
+                const companyDescElement = document.getElementById('companyDescription');
+                const additionalContextElement = document.getElementById('additionalContext');
+                
+                if (!companyNameElement || !companyDescElement) {
+                    showPreview('error', 'Required form fields not found', 'previewSection');
                     return;
                 }
+                
+                formData.append('company_name', companyNameElement.value);
+                formData.append('company_description', companyDescElement.value);
+                formData.append('business_type', selectedBusinessType);
+                formData.append('complexity', selectedComplexity);
+                
+                // Add requirements
+                const requirements = [];
+                document.querySelectorAll('#requirementsList input').forEach(input => {
+                    if (input.value.trim()) {
+                        requirements.push(input.value.trim());
+                    }
+                });
+                formData.append('requirements', requirements.join(','));
+                
+                // Add additional context with null check
+                const additionalContext = additionalContextElement ? additionalContextElement.value : '';
+                if (additionalContext) {
+                    formData.append('additional_context', additionalContext);
+                }
 
-                currentSchema = dbResult.schema;
-                currentSampleData = dbResult.sample_data;
-
-                // Step 2: Create the company
-                const companyData = {
-                    name: document.getElementById('companyName').value,
-                    business_type: selectedBusinessType,
-                    description: document.getElementById('companyDescription').value,
-                    schema: currentSchema,
-                    sample_data: currentSampleData
-                };
-
-                const companyResponse = await fetchWithTimeout('/api/companies', {
+                // Call enhanced API endpoint
+                const response = await fetchWithTimeout('/api/companies/create-enhanced', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(companyData)
-                }, 60000);
+                    body: formData
+                }, 300000); // 5 minute timeout for enhanced generation
 
-                const companyResult = await companyResponse.json();
+                const result = await response.json();
 
-                if (companyResponse.ok) {
-                    showPreview('success', `🎉 Company "${companyResult.name}" created successfully with a fully functional database!<br><br>You can now start chatting with your business data.`);
+                if (response.ok) {
+                    // Show success with detailed stats
+                    let successMessage = `🎉 Enhanced Company "${result.company_name}" created successfully!<br><br>`;
+                    successMessage += `📊 <strong>Generated Data:</strong><br>`;
+                    if (result.data_stats) {
+                        Object.entries(result.data_stats).forEach(([key, value]) => {
+                            successMessage += `• ${key.charAt(0).toUpperCase() + key.slice(1)}: ${value}<br>`;
+                        });
+                    }
+                    successMessage += `<br>You can now start chatting with your comprehensive business data!`;
+                    
+                    showPreview('success', successMessage, 'previewSection');
                     document.getElementById('companyForm').reset();
                     resetSelections();
                     await loadCompanies();
                 } else {
-                    handleApiError(companyResult, 'company creation');
+                    handleApiError(result, 'enhanced company creation');
                 }
 
             } catch (error) {
-                handleNetworkError(error, 'company creation');
+                console.error('Enhanced creation error:', error);
+                if (error.name === 'AbortError') {
+                    showPreview('error', '⏰ Request timed out. Enhanced database generation can take several minutes. Please try again or use the simple complexity option.', 'previewSection');
+                } else {
+                    showPreview('error', `❌ Error creating enhanced company: ${error.message}`, 'previewSection');
+                }
             }
         }
 
         function validateForm() {
-            const name = document.getElementById('companyName').value.trim();
-            const description = document.getElementById('companyDescription').value.trim();
+            const nameElement = document.getElementById('companyName');
+            const descriptionElement = document.getElementById('companyDescription');
+            
+            if (!nameElement || !descriptionElement) {
+                showPreview('error', 'Form elements not found. Please reload the page.', 'previewSection');
+                return false;
+            }
+            
+            const name = nameElement.value.trim();
+            const description = descriptionElement.value.trim();
 
             if (!name) {
-                showPreview('error', 'Please enter a company name.');
+                showPreview('error', 'Please enter a company name.', 'previewSection');
                 return false;
             }
 
             if (!description || description.length < 10) {
-                showPreview('error', 'Please provide a detailed company description (at least 10 characters).');
+                showPreview('error', 'Please provide a detailed company description (at least 10 characters).', 'previewSection');
                 return false;
             }
 
             if (!selectedBusinessType) {
-                showPreview('error', 'Please select a business type.');
+                showPreview('error', 'Please select a business type.', 'previewSection');
                 return false;
             }
 
@@ -822,34 +1702,55 @@
             document.querySelector('[data-complexity="simple"]').classList.add('selected');
         }
 
-        function showPreview(type, message) {
-            const previewSection = document.getElementById('previewSection');
-            
-            if (type === 'loading') {
-                previewSection.innerHTML = `
-                    <div class="loading">
-                        <div class="spinner"></div>
-                        <div>${message}</div>
-                    </div>
-                `;
-            } else if (type === 'error') {
-                previewSection.innerHTML = `
-                    <div class="error">
-                        <strong>❌ Error:</strong> ${message}
-                        <br><br>
-                        <small>
-                            <strong>Tips:</strong>
-                            <ul style="margin: 10px 0;">
-                                <li>Make sure your company description is detailed and specific</li>
-                                <li>Try a simpler complexity level if generation fails</li>
-                                <li>Check that the server is running and API keys are configured</li>
-                            </ul>
-                        </small>
-                    </div>
-                `;
-            } else if (type === 'success') {
-                previewSection.innerHTML = `<div class="success">${message}</div>`;
+        function showPreview(type, message, targetId = 'previewSection') {
+            try {
+                const previewSection = document.getElementById(targetId);
+                
+                if (!previewSection) {
+                    console.error(`${targetId} element not found`);
+                    // Create a temporary alert if the preview section is not available
+                    alert(`${type.toUpperCase()}: ${message.replace(/<[^>]*>/g, '')}`);
+                    return;
+                }
+                
+                if (type === 'loading') {
+                    previewSection.innerHTML = `
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <div>${message}</div>
+                        </div>
+                    `;
+                } else if (type === 'error') {
+                    previewSection.innerHTML = `
+                        <div class="error">
+                            <strong>❌ Error:</strong> ${message}
+                            <br><br>
+                            <small>
+                                <strong>Tips:</strong>
+                                <ul style="margin: 10px 0;">
+                                    <li>Make sure your company description is detailed and specific</li>
+                                    <li>Try a simpler complexity level if generation fails</li>
+                                    <li>Check that the server is running and API keys are configured</li>
+                                </ul>
+                            </small>
+                        </div>
+                    `;
+                } else if (type === 'success') {
+                    previewSection.innerHTML = `<div class="success">${message}</div>`;
+                }
+
+                // Show the preview section with additional null check
+                if (previewSection) {
+                    previewSection.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error in showPreview function:', error);
+                alert(`${type.toUpperCase()}: ${message.replace(/<[^>]*>/g, '')}`);
             }
+        }
+
+        function showUploadMessage(type, message) {
+            showPreview(type, message, 'uploadPreviewSection');
         }
 
         function displaySchemaPreview(schema) {
@@ -910,7 +1811,7 @@
                     }
                 }
             }
-            showPreview('error', errorMessage);
+            showPreview('error', errorMessage, 'previewSection');
             console.error(`${operation} error:`, result);
         }
 
@@ -923,12 +1824,18 @@
             } else if (error.message.includes('NetworkError')) {
                 errorMessage = 'Network connection failed. Check your internet connection.';
             }
-            showPreview('error', errorMessage);
+            showPreview('error', errorMessage, 'previewSection');
             console.error(`${operation} network error:`, error);
         }
 
         async function loadCompanies() {
             const container = document.getElementById('companiesContainer');
+            
+            if (!container) {
+                console.error('Companies container not found');
+                return;
+            }
+            
             container.innerHTML = `
                 <div class="loading">
                     <div class="spinner"></div>
@@ -960,6 +1867,11 @@
 
         function displayCompanies(companies) {
             const container = document.getElementById('companiesContainer');
+            
+            if (!container) {
+                console.error('Companies container not found in displayCompanies');
+                return;
+            }
             
             if (!companies || companies.length === 0) {
                 container.innerHTML = `
@@ -1006,13 +1918,22 @@
 
         async function setActiveCompany(companyId) {
             try {
-                const response = await fetch(`/api/companies/${companyId}/activate`, {
-                    method: 'POST'
+                const response = await fetch('/api/companies/switch', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ company_id: companyId })
                 });
 
                 if (response.ok) {
                     await loadCompanies();
-                    showPreview('success', '✅ Company activated successfully!');
+                    showPreview('success', '✅ Company activated successfully! The chat interface will now use this company\'s data.');
+                    
+                    // Notify parent window if opened from another page
+                    if (window.opener) {
+                        window.opener.postMessage({ type: 'companyChanged' }, '*');
+                    }
                 } else {
                     const error = await response.json();
                     showPreview('error', `Failed to activate company: ${error.detail || error.message}`);
@@ -1061,6 +1982,193 @@
                 button.parentElement.remove();
             }
         }
+
+        // ===== LANGUAGE SUPPORT SYSTEM =====
+        
+        // Translation dictionaries
+        const translations = {
+            en: {
+                page_title: "Company & Database Manager",
+                page_subtitle: "Create and manage companies with AI-powered database generation",
+                chat_interface: "Chat Interface",
+                companies: "Companies",
+                databases: "Databases",
+                language: "Language:",
+                create_section_title: "Create New Company & Database",
+                data_source_label: "Data Source:",
+                ai_generated: "AI Generated",
+                upload_files: "Upload Files",
+                remove_button: "Remove",
+                add_requirement_button: "+ Add Requirement",
+                preview_schema_button: "🔍 Preview Schema",
+                create_database_button: "🚀 Create Company & Generate Database",
+                create_company: "Create New Company",
+                company_name_label: "Company Name *",
+                company_name_placeholder: "Enter your company name",
+                description_label: "Company Description *",
+                description_placeholder: "Describe your business, products, services, and target market in detail...",
+                business_type_label: "Business Type *",
+                retail_title: "Retail",
+                retail_desc: "E-commerce, stores, products, customers",
+                healthcare_title: "Healthcare", 
+                healthcare_desc: "Patients, treatments, medical records",
+                finance_title: "Finance",
+                finance_desc: "Accounts, transactions, investments",
+                education_title: "Education",
+                education_desc: "Students, courses, grades, schools",
+                manufacturing_title: "Manufacturing",
+                manufacturing_desc: "Production, inventory, supply chain",
+                ecommerce_title: "E-commerce",
+                ecommerce_desc: "Online sales, digital marketplace",
+                database_config_title: "🔧 Database Configuration",
+                complexity_label: "Database Complexity",
+                simple_title: "Simple",
+                simple_desc: "Basic tables, ideal for MVPs",
+                medium_title: "Medium",
+                medium_desc: "Standard business logic",
+                complex_title: "Complex",
+                complex_desc: "Advanced relationships & features",
+                create_button: "Create Company",
+                existing_companies: "📊 Existing Companies",
+                no_companies: "📝 No companies yet",
+                no_companies_desc: "Create your first company using the form on the left to get started!",
+                activate: "🔄 Activate",
+                delete: "🗑️ Delete",
+                specific_requirements_label: "Specific Requirements (Optional)",
+                requirements_placeholder: "e.g., Multi-tenant architecture, audit logging, etc.",
+                additional_context_label: "Additional Context (Optional)",
+                additional_context_placeholder: "Any additional information about your business logic, special requirements, or preferences...",
+                how_it_works_title: "💡 How it works:",
+                how_it_works_step1: "Fill in your company details and select business type",
+                how_it_works_step2: "Preview the AI-generated database schema (optional)",
+                how_it_works_step3: "Create your company with a fully functional database",
+                how_it_works_step4: "Start chatting with your business data immediately!",
+                upload_files_label: "📁 Upload Your Data Files",
+                drag_drop_title: "Drag & Drop Files Here",
+                upload_or_text: "or",
+                upload_browse_text: "click to browse",
+                processing_options_label: "⚙️ Processing Options",
+                auto_detect_label: "Auto-detect relationships between tables",
+                normalize_data_label: "Normalize data formats (dates, numbers)",
+                create_indexes_label: "Create database indexes for better performance",
+                validate_data_label: "Validate data integrity (slower but more reliable)",
+                preview_data_button: "🔍 Preview Data",
+                create_from_upload_button: "📁 Create Company from Upload",
+                data_preview_title: "📊 Data Preview"
+            },
+            es: {
+                page_title: "Gestor de Empresas y Bases de Datos",
+                page_subtitle: "Crear y gestionar empresas con generación de bases de datos impulsada por IA",
+                chat_interface: "Interfaz de Chat",
+                companies: "Empresas",
+                databases: "Bases de Datos",
+                language: "Idioma:",
+                create_section_title: "Crear Nueva Empresa y Base de Datos",
+                data_source_label: "Fuente de Datos:",
+                ai_generated: "Generado por IA",
+                upload_files: "Subir Archivos",
+                remove_button: "Eliminar",
+                add_requirement_button: "+ Agregar Requisito",
+                preview_schema_button: "🔍 Vista Previa del Esquema",
+                create_database_button: "🚀 Crear Empresa y Generar Base de Datos",
+                create_company: "Crear Nueva Empresa",
+                company_name_label: "Nombre de la Empresa *",
+                company_name_placeholder: "Ingresa el nombre de tu empresa",
+                description_label: "Descripción de la Empresa *",
+                description_placeholder: "Describe tu negocio, productos, servicios y mercado objetivo en detalle...",
+                business_type_label: "Tipo de Negocio *",
+                retail_title: "Minorista",
+                retail_desc: "Comercio electrónico, tiendas, productos, clientes",
+                healthcare_title: "Salud",
+                healthcare_desc: "Pacientes, tratamientos, registros médicos",
+                finance_title: "Finanzas",
+                finance_desc: "Cuentas, transacciones, inversiones",
+                education_title: "Educación",
+                education_desc: "Estudiantes, cursos, calificaciones, escuelas",
+                manufacturing_title: "Manufactura",
+                manufacturing_desc: "Producción, inventario, cadena de suministro",
+                ecommerce_title: "Comercio Electrónico",
+                ecommerce_desc: "Ventas en línea, mercado digital",
+                database_config_title: "🔧 Configuración de Base de Datos",
+                complexity_label: "Complejidad de Base de Datos",
+                simple_title: "Simple",
+                simple_desc: "Tablas básicas, ideal para MVPs",
+                medium_title: "Medio",
+                medium_desc: "Lógica empresarial estándar",
+                complex_title: "Complejo",
+                complex_desc: "Relaciones y características avanzadas",
+                create_button: "Crear Empresa",
+                existing_companies: "📊 Empresas Existentes",
+                no_companies: "📝 Aún no hay empresas",
+                no_companies_desc: "¡Crea tu primera empresa usando el formulario de la izquierda para comenzar!",
+                activate: "🔄 Activar",
+                delete: "🗑️ Eliminar",
+                specific_requirements_label: "Requisitos Específicos (Opcional)",
+                requirements_placeholder: "ej., Arquitectura multi-inquilino, registro de auditoría, etc.",
+                additional_context_label: "Contexto Adicional (Opcional)",
+                additional_context_placeholder: "Cualquier información adicional sobre tu lógica de negocio, requisitos especiales o preferencias...",
+                how_it_works_title: "💡 Cómo funciona:",
+                how_it_works_step1: "Completa los detalles de tu empresa y selecciona el tipo de negocio",
+                how_it_works_step2: "Previsualiza el esquema de base de datos generado por IA (opcional)",
+                how_it_works_step3: "Crea tu empresa con una base de datos completamente funcional",
+                how_it_works_step4: "¡Comienza a chatear con los datos de tu negocio inmediatamente!",
+                upload_files_label: "📁 Sube Tus Archivos de Datos",
+                drag_drop_title: "Arrastra y Suelta Archivos Aquí",
+                upload_or_text: "o",
+                upload_browse_text: "haz clic para explorar",
+                processing_options_label: "⚙️ Opciones de Procesamiento",
+                auto_detect_label: "Detectar automáticamente relaciones entre tablas",
+                normalize_data_label: "Normalizar formatos de datos (fechas, números)",
+                create_indexes_label: "Crear índices de base de datos para mejor rendimiento",
+                validate_data_label: "Validar integridad de datos (más lento pero más confiable)",
+                preview_data_button: "🔍 Previsualizar Datos",
+                create_from_upload_button: "📁 Crear Empresa desde Carga",
+                data_preview_title: "📊 Vista Previa de Datos"
+            }
+        };
+
+        // Current language state
+        let currentLanguage = localStorage.getItem('chatbot-language') || 'en';
+
+        // Language toggle function
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'es' : 'en';
+            localStorage.setItem('chatbot-language', currentLanguage);
+            updateLanguageDisplay();
+            updateTranslations();
+        }
+
+        // Update language display
+        function updateLanguageDisplay() {
+            document.getElementById('current-lang').textContent = currentLanguage.toUpperCase();
+            document.documentElement.lang = currentLanguage;
+        }
+
+        // Update all translations on the page
+        function updateTranslations() {
+            const elementsToTranslate = document.querySelectorAll('[data-translate]');
+            elementsToTranslate.forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    element.textContent = translations[currentLanguage][key];
+                }
+            });
+
+            // Handle placeholder translations
+            const elementsWithPlaceholders = document.querySelectorAll('[data-translate-placeholder]');
+            elementsWithPlaceholders.forEach(element => {
+                const key = element.getAttribute('data-translate-placeholder');
+                if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    element.placeholder = translations[currentLanguage][key];
+                }
+            });
+        }
+
+        // Initialize language on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateLanguageDisplay();
+            updateTranslations();
+        });
     </script>
 </body>
 </html>

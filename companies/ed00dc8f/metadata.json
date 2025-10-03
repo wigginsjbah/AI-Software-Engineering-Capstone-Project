@@ -1,0 +1,15 @@
+{
+  "id": "ed00dc8f",
+  "name": "Chariott",
+  "description": "Business that sells children's toys.",
+  "business_type": "retail",
+  "complexity": "simple",
+  "database_path": "chariott_database.db",
+  "created_at": "2025-10-03T13:11:51.899722",
+  "data_stats": {
+    "products": 24,
+    "customers": 800,
+    "reviews": 252
+  },
+  "generation_type": "enhanced_ai"
+}

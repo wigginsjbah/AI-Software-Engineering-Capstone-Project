@@ -1,0 +1,15 @@
+{
+  "id": "b6bb6f29",
+  "name": "Janelle's Jellybeans",
+  "description": "This is a large corporation that sells jellybeans and various other forms of candy like chocolate, lollipops, taffy, etc.",
+  "business_type": "retail",
+  "complexity": "simple",
+  "database_path": "companies\\b6bb6f29\\business_data.db",
+  "created_at": "2025-10-03T10:35:19.300274",
+  "data_stats": {
+    "products": 64,
+    "customers": 800,
+    "reviews": 498
+  },
+  "generation_type": "enhanced_ai"
+}

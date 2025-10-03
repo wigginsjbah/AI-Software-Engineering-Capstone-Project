@@ -1,0 +1,58 @@
+{
+  "company_info": {
+    "name": "TechStartup Inc",
+    "founded": "2020-03-15",
+    "employees": 45,
+    "revenue_2023": 2500000,
+    "headquarters": "San Francisco, CA"
+  },
+  "financial_data": [
+    {
+      "quarter": "Q1_2024",
+      "revenue": 750000,
+      "expenses": 620000,
+      "profit": 130000,
+      "customers": 1250
+    },
+    {
+      "quarter": "Q2_2024", 
+      "revenue": 820000,
+      "expenses": 680000,
+      "profit": 140000,
+      "customers": 1380
+    },
+    {
+      "quarter": "Q3_2024",
+      "revenue": 920000,
+      "expenses": 750000,
+      "profit": 170000,
+      "customers": 1520
+    }
+  ],
+  "departments": [
+    {
+      "name": "Engineering",
+      "employees": 18,
+      "budget": 1200000,
+      "projects": ["Mobile App", "Web Platform", "API Gateway"]
+    },
+    {
+      "name": "Sales",
+      "employees": 12,
+      "budget": 600000,
+      "projects": ["Lead Generation", "Customer Outreach"]
+    },
+    {
+      "name": "Marketing",
+      "employees": 8,
+      "budget": 400000,
+      "projects": ["Brand Campaign", "Social Media", "Content Strategy"]
+    },
+    {
+      "name": "Operations",
+      "employees": 7,
+      "budget": 300000,
+      "projects": ["Process Optimization", "Quality Assurance"]
+    }
+  ]
+}

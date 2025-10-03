@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Companies - Business Intelligence RAG Chatbot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(-45deg, #667eea, #764ba2, #6c7ce0, #8b7ec8);
+            background-size: 400% 400%;
+            animation: gradientShift 70s ease infinite;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .header {
+            background: linear-gradient(-45deg, #667eea, #764ba2, #6c7ce0, #8b7ec8);
+            background-size: 400% 400%;
+            animation: gradientShift 70s ease infinite;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .header-nav {
+            margin-top: 15px;
+        }
+
+        .nav-link {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.3);
+            display: inline-block;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-1px);
+        }
+
+        .nav-link.active {
+            background: rgba(255,255,255,0.95);
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Toolbar Styles */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545, #fd7e14);
+        }
+
+        /* Companies Grid */
+        .companies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .company-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #e0e0e0;
+            position: relative;
+        }
+
+        .company-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .company-card.active {
+            border-color: #28a745;
+            background: linear-gradient(135deg, #f8fff8 0%, #ffffff 100%);
+        }
+
+        .company-card.active::before {
+            content: "ACTIVE";
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #28a745;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            font-weight: bold;
+        }
+
+        .company-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .company-name {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .company-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .company-type {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .business-type-badge {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+
+        .company-description {
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+
+        .company-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .company-actions .btn {
+            padding: 10px 18px;
+            font-size: 0.85em;
+            border-radius: 6px;
+        }
+
+        /* Loading and Empty States */
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .empty-state p {
+            margin-bottom: 25px;
+            font-size: 1.1em;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #dc3545;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 data-translate="page_title">💼 Business Intelligence Chatbot</h1>
+        <p data-translate="page_subtitle">Manage your companies and chat with your business data</p>
+        <div class="header-nav">
+            <a href="/" class="nav-link" data-translate="chat_interface">Chat Interface</a>
+            <a href="/companies" class="nav-link active" data-translate="companies">Companies</a>
+            <a href="/databases" class="nav-link" data-translate="databases">Databases</a>
+            
+            <!-- Language Toggle -->
+            <div style="display: inline-flex; align-items: center; margin-left: 20px;">
+                <span style="color: rgba(255,255,255,0.9); font-size: 0.9rem; margin-right: 8px;" data-translate="language">Language:</span>
+                <button 
+                    id="language-toggle"
+                    onclick="toggleLanguage()" 
+                    style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); 
+                           border-radius: 6px; color: white; padding: 5px 10px; font-size: 0.8rem; 
+                           cursor: pointer; transition: all 0.3s ease;"
+                    onmouseover="this.style.background='rgba(255,255,255,0.3)'"
+                    onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                    <span id="current-lang">EN</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <h2 class="section-title" data-translate="your_companies">
+                🏢 Your Companies
+            </h2>
+            
+            <div class="toolbar">
+                <div class="search-box">
+                    <input type="text" id="searchInput" data-translate-placeholder="search_placeholder" placeholder="Search companies..." onkeyup="filterCompanies()">
+                </div>
+                <a href="/databases" class="btn" data-translate="create_first_company">➕ Create New Company</a>
+            </div>
+
+            <div id="companiesContainer">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading companies...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allCompanies = [];
+
+        // Load companies on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCompanies();
+        });
+
+        async function loadCompanies() {
+            try {
+                const response = await fetch('/api/companies/');
+                const data = await response.json();
+                allCompanies = data.companies; // Extract the companies array from the response
+                displayCompanies(data.companies);
+            } catch (error) {
+                console.error('Error loading companies:', error);
+                document.getElementById('companiesContainer').innerHTML = `
+                    <div class="error">
+                        <strong>Error loading companies:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function displayCompanies(companies) {
+            const container = document.getElementById('companiesContainer');
+            
+            if (companies.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No Companies Found</h3>
+                        <p>You haven't created any companies yet.</p>
+                        <a href="/databases" class="btn">Create Your First Company</a>
+                    </div>
+                `;
+                return;
+            }
+
+            const companiesHtml = companies.map(company => `
+                <div class="company-card ${company.is_active ? 'active' : ''}">
+                    <div class="company-header">
+                        <h3 class="company-name">${company.name}</h3>
+                        <span class="company-status ${company.is_active ? 'status-active' : 'status-inactive'}">
+                            ${company.is_active ? getTranslation('active') : getTranslation('inactive')}
+                        </span>
+                    </div>
+                    
+                    <div class="company-type">
+                        <span class="business-type-badge">${company.business_type}</span>
+                    </div>
+                    
+                    <div class="company-description">
+                        ${company.description || getTranslation('no_description')}
+                    </div>
+                    
+                    <div class="company-actions">
+                        <button class="btn btn-success" onclick="activateCompany('${company.id}')">
+                            ${company.is_active ? '✓ ' + getTranslation('active') : getTranslation('activate')}
+                        </button>
+                        <a href="/?company=${company.id}" class="btn">${getTranslation('chat')}</a>
+                        <button class="btn btn-danger" onclick="deleteCompany('${company.id}')">${getTranslation('delete')}</button>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = `<div class="companies-grid">${companiesHtml}</div>`;
+        }
+
+        function filterCompanies() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filteredCompanies = allCompanies.filter(company => 
+                company.name.toLowerCase().includes(searchTerm) ||
+                company.business_type.toLowerCase().includes(searchTerm) ||
+                (company.description && company.description.toLowerCase().includes(searchTerm))
+            );
+            displayCompanies(filteredCompanies);
+        }
+
+        async function activateCompany(companyId) {
+            try {
+                const response = await fetch('/api/companies/switch', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        company_id: companyId
+                    })
+                });
+                
+                if (response.ok) {
+                    loadCompanies(); // Reload to update UI
+                    showMessage('Company activated successfully!', 'success');
+                } else {
+                    throw new Error('Failed to activate company');
+                }
+            } catch (error) {
+                console.error('Error activating company:', error);
+                showMessage('Error activating company: ' + error.message, 'error');
+            }
+        }
+
+        async function deleteCompany(companyId) {
+            if (!confirm('Are you sure you want to delete this company? This action cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/companies/${companyId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    loadCompanies(); // Reload to update UI
+                    showMessage('Company deleted successfully!', 'success');
+                } else {
+                    throw new Error('Failed to delete company');
+                }
+            } catch (error) {
+                console.error('Error deleting company:', error);
+                showMessage('Error deleting company: ' + error.message, 'error');
+            }
+        }
+
+        function showMessage(message, type) {
+            const container = document.getElementById('companiesContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type;
+            messageDiv.innerHTML = message;
+            
+            container.insertBefore(messageDiv, container.firstChild);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+
+        // Language toggle functionality
+        let currentLanguage = localStorage.getItem('chatbot-language') || 'en';
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'es' : 'en';
+            localStorage.setItem('chatbot-language', currentLanguage);
+            document.getElementById('current-lang').textContent = currentLanguage.toUpperCase();
+            
+            // Apply translations
+            applyTranslations(currentLanguage);
+            loadCompanies(); // Refresh companies to apply new translations
+        }
+
+        function applyTranslations(lang) {
+            const translations = {
+                'en': {
+                    'page_title': 'Business Intelligence Chatbot',
+                    'page_subtitle': 'Manage your companies and chat with your business data',
+                    'your_companies': 'Your Companies',
+                    'search_placeholder': 'Search companies...',
+                    'create_first_company': 'Create Your First Company',
+                    'no_companies_message': 'You haven\'t created any companies yet.',
+                    'chat': 'Chat',
+                    'delete': 'Delete',
+                    'active': 'Active',
+                    'inactive': 'Inactive',
+                    'activate': 'Activate',
+                    'no_description': 'No description available',
+                    'language': 'Language',
+                    'chat_interface': 'Chat Interface',
+                    'companies': 'Companies',
+                    'databases': 'Databases'
+                },
+                'es': {
+                    'page_title': 'Chatbot de Inteligencia Empresarial',
+                    'page_subtitle': 'Gestiona tus empresas y chatea con tus datos empresariales',
+                    'your_companies': 'Tus Empresas',
+                    'search_placeholder': 'Buscar empresas...',
+                    'create_first_company': 'Crear Tu Primera Empresa',
+                    'no_companies_message': 'Aún no has creado ninguna empresa.',
+                    'chat': 'Chat',
+                    'delete': 'Eliminar',
+                    'active': 'Activo',
+                    'inactive': 'Inactivo',
+                    'activate': 'Activar',
+                    'no_description': 'Sin descripción disponible',
+                    'language': 'Idioma',
+                    'chat_interface': 'Interfaz de Chat',
+                    'companies': 'Empresas',
+                    'databases': 'Bases de Datos'
+                }
+            };
+
+            // Store current translations globally
+            window.currentTranslations = translations[lang];
+
+            // Apply translations to elements with data-translate attributes
+            const elements = document.querySelectorAll('[data-translate]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+
+            // Apply placeholder translations
+            const placeholderElements = document.querySelectorAll('[data-translate-placeholder]');
+            placeholderElements.forEach(element => {
+                const key = element.getAttribute('data-translate-placeholder');
+                if (translations[lang][key]) {
+                    element.placeholder = translations[lang][key];
+                }
+            });
+        }
+
+        // Helper function to get translated text
+        function getTranslation(key) {
+            return window.currentTranslations && window.currentTranslations[key] ? window.currentTranslations[key] : key;
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            applyTranslations(currentLanguage);
+            document.getElementById('current-lang').textContent = currentLanguage.toUpperCase();
+            loadCompanies();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "name": "UploadFileCompanyTest",
+  "description": "This is a business that sells socks.",
+  "business_type": "custom",
+  "database_path": "data\\companies\\uploadfilecompanytest\\business_data.db",
+  "created_at": "2025-10-03T09:32:10.272815",
+  "generation_type": "file_upload",
+  "uploaded_files": [
+    "ecommerce_store.db"
+  ],
+  "processing_status": "completed",
+  "processed_tables": [
+    "products",
+    "sales",
+    "suppliers"
+  ],
+  "processing_completed_at": "2025-10-03T09:32:11.304187"
+}

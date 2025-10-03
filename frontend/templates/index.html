@@ -7,14 +7,127 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(-45deg, #667eea, #764ba2, #6c7ce0, #8b7ec8);
+            background-size: 400% 400%;
+            animation: gradientShift 70s ease infinite;
+            color: #333;
+        }
+
+        .header-glass {
+            background: linear-gradient(-45deg, #667eea, #764ba2, #6c7ce0, #8b7ec8) !important;
+            background-size: 400% 400% !important;
+            animation: gradientShift 70s ease infinite !important;
+            backdrop-filter: blur(10px) !important;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Make chat input placeholder text white */
+        #message-input::placeholder {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+
+        /* Also make any other input placeholders white */
+        input::placeholder, textarea::placeholder {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+
+        /* Conversation Tabs Styling */
+        .conversation-tabs-section {
+            padding: 0 1rem;
+        }
+
+        .conversation-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .conversation-tab {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .conversation-tab:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .conversation-tab.active {
+            background: rgba(59, 130, 246, 0.6);
+            border-color: rgba(59, 130, 246, 0.8);
+            color: white;
+        }
+
+        .conversation-tab .close-btn {
+            margin-left: 0.5rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .conversation-tab .close-btn:hover {
+            color: rgba(255, 255, 255, 1);
+        }
+
+        /* Chat Session Items Styling */
+        .chat-session-item {
+            transition: all 0.2s ease;
+        }
+
+        .chat-session-item:hover {
+            transform: translateY(-1px);
+        }
+
+        .chat-session-item.active .chat-session-button {
+            background: rgba(59, 130, 246, 0.3);
+            border-color: rgba(59, 130, 246, 0.6);
+        }
+
+        .chat-session-button {
+            transition: all 0.2s ease;
+        }
+
+        .chat-session-button:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            transform: scale(1.02);
+        }
+    </style>
 </head>
-<body class="gradient-bg h-screen flex flex-col overflow-hidden">
+<body class="h-screen flex flex-col overflow-hidden">
     <!-- Floating Particles -->
     <div id="particles-container"></div>
     <div class="header-glass bg-blue-600/80 backdrop-blur-lg border-b border-white/10 text-white p-6 shadow-2xl">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="header-content">
-                <h1 class="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-cyan-200 bg-clip-text text-transparent animate-pulse" data-translate="title">Business Intelligence Chatbot</h1>
+                <h1 class="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-cyan-200 bg-clip-text text-transparent animate-pulse" data-translate="title">💬 Chat Interface</h1>
                 <p class="text-blue-100/90 text-lg mt-2 font-light" data-translate="subtitle">AI-powered insights from your business data</p>
                 <!-- Company Context Indicator -->
                 <div id="company-context" class="mt-2 text-sm text-blue-200/90">
@@ -25,11 +138,11 @@
             <div class="flex items-center space-x-4">
                 <!-- Navigation Links -->
                 <div class="flex space-x-2">
-                    <a href="/companies" class="modern-button bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center space-x-2 hover:scale-105 active:scale-95">
-                        🏢 Companies
+                    <a href="/companies" class="modern-button bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center space-x-2 hover:scale-105 active:scale-95" data-translate="companies">
+                        Companies
                     </a>
-                    <a href="/database-generator" class="modern-button bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center space-x-2 hover:scale-105 active:scale-95">
-                        📊 Database Generator
+                    <a href="/databases" class="modern-button bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center space-x-2 hover:scale-105 active:scale-95" data-translate="databases">
+                        Databases
                     </a>
                 </div>
                 <!-- Language Toggle -->
@@ -70,7 +183,7 @@
                 </button>
             </div>
 
-            <h3 class="font-bold text-white text-lg mb-6 mt-8 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent" data-translate="chat_history">Chat History</h3>
+            <h3 class="font-bold text-white text-lg mb-6 mt-8 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent" data-translate="chat_history">📝 Chat History</h3>
             <div id="chat-sessions" class="space-y-3">
                 <!-- Chat sessions will be populated here -->
             </div>
@@ -89,7 +202,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
-                    <h3 class="text-lg font-bold text-white bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent" data-translate="documents_section">Documents</h3>
+                    <h3 class="text-lg font-bold text-white bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent" data-translate="documents_section">📄 Documents</h3>
                     <span class="bg-blue-400/20 text-blue-200 text-xs font-bold px-3 py-1 rounded-full border border-blue-300/30" id="doc-count">0</span>
                 </div>
                 <svg id="documents-chevron" class="w-5 h-5 text-blue-300 transform transition-transform duration-300" 
@@ -136,6 +249,19 @@
                         <div>Size: <span id="total-size">0 MB</span></div>
                         <div>Categories: <span id="doc-categories">None</span></div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conversation Tabs Section -->
+        <div class="conversation-tabs-section mt-4">
+            <h3 class="font-bold text-white text-lg mb-4 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent" data-translate="conversation_history">Conversation History</h3>
+            <div class="conversation-tabs-container">
+                <div class="conversation-tabs" id="conversation-tabs">
+                    <!-- Tabs will be populated by JavaScript -->
+                </div>
+                <div class="mt-2">
+                    <button onclick="clearAllConversations()" class="text-xs text-red-300 hover:text-red-200 transition-colors duration-200" data-translate="clear_all_history">Clear All History</button>
                 </div>
             </div>
         </div>
@@ -202,6 +328,42 @@
     <script>
         let sessionId = 'session_' + Date.now();
         let isLoading = false;
+        let currentCompanyId = null;
+
+        // Chat history management
+        function getChatHistoryKey(companyId) {
+            return `chat_history_${companyId || 'default'}`;
+        }
+
+        function saveChatHistory(companyId, messages) {
+            const key = getChatHistoryKey(companyId);
+            localStorage.setItem(key, JSON.stringify(messages));
+        }
+
+        function loadChatHistory(companyId) {
+            const key = getChatHistoryKey(companyId);
+            const saved = localStorage.getItem(key);
+            return saved ? JSON.parse(saved) : [];
+        }
+
+        function clearChatHistory(companyId) {
+            const key = getChatHistoryKey(companyId);
+            localStorage.removeItem(key);
+        }
+
+        // saveMessageToHistory is now defined in the conversation management section below
+
+        function restoreChatHistory(companyId) {
+            const history = loadChatHistory(companyId);
+            const messagesContainer = document.getElementById('messages');
+            messagesContainer.innerHTML = '';
+            
+            history.forEach(item => {
+                addMessageToUI(item.message, item.sender, item.sources, item.sqlQuery, false);
+            });
+            
+            scrollToBottom();
+        }
 
         // Handle enter key press
         function handleKeyPress(event) {
@@ -236,7 +398,7 @@
             
             // Clear input and show user message
             input.value = '';
-            addMessage(message, 'user');
+            await addMessage(message, 'user');
             setLoading(true);
             
             try {
@@ -248,9 +410,13 @@
                     message: message,
                     session_id: sessionId,
                     include_sources: document.getElementById('include-sources').checked,
-                    company_id: currentCompany?.company_id || null
+                    company_id: currentCompany?.company_id || null,
+                    language: currentLanguage
                 };
                 console.log('Chat request body:', requestBody);
+
+                // Ensure typing indicator shows for at least 800ms
+                const startTime = Date.now();
                 
                 const response = await fetch('/api/v1/chat', {
                     method: 'POST',
@@ -262,21 +428,40 @@
                 
                 const data = await response.json();
                 
+                // Ensure minimum display time for typing indicator
+                const elapsedTime = Date.now() - startTime;
+                const minDisplayTime = 800;
+                if (elapsedTime < minDisplayTime) {
+                    await new Promise(resolve => setTimeout(resolve, minDisplayTime - elapsedTime));
+                }
+                
                 if (response.ok) {
-                    addMessage(data.message, 'assistant', data.sources, data.sql_query);
+                    await addMessage(data.message, 'assistant', data.sources, data.sql_query);
                 } else {
-                    addMessage('Sorry, I encountered an error processing your request.', 'assistant');
+                    await addMessage('Sorry, I encountered an error processing your request.', 'assistant');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                addMessage('Sorry, I couldn\'t connect to the server. Please try again.', 'assistant');
+                await addMessage('Sorry, I couldn\'t connect to the server. Please try again.', 'assistant');
             } finally {
                 setLoading(false);
             }
         }
 
-        // Add message to chat
-        function addMessage(content, sender, sources = [], sqlQuery = null) {
+        // Add message to chat (with history saving)
+        async function addMessage(content, sender, sources = [], sqlQuery = null) {
+            // Get current company to ensure we have the right ID
+            const currentCompany = await getCurrentCompany();
+            const companyId = currentCompany?.company_id || currentCompanyId || 'default';
+            
+            // Save to history
+            saveMessageToHistory(companyId, content, sender, sources, sqlQuery);
+            // Add to UI
+            addMessageToUI(content, sender, sources, sqlQuery, true);
+        }
+
+        // Add message to UI only (used for history restoration)
+        function addMessageToUI(content, sender, sources = [], sqlQuery = null, shouldScroll = true) {
             const messagesContainer = document.getElementById('messages');
             const messageDiv = document.createElement('div');
             messageDiv.className = 'chat-message';
@@ -336,7 +521,10 @@
             }
             
             messagesContainer.appendChild(messageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            if (shouldScroll) {
+                scrollToBottom();
+            }
             
             // Update translations for new content
             if (typeof updateTranslations === 'function') {
@@ -394,11 +582,13 @@
                 sendButton.disabled = true;
                 statusIndicator.textContent = '● Processing';
                 statusIndicator.className = 'text-yellow-500';
+                showTypingIndicator();
             } else {
                 sendButton.textContent = 'Send';
                 sendButton.disabled = false;
                 statusIndicator.textContent = '● Online';
                 statusIndicator.className = 'text-green-500';
+                hideTypingIndicator();
             }
         }
 
@@ -432,6 +622,8 @@
                 title: "Business Intelligence Chatbot",
                 subtitle: "AI-powered insights from your business data",
                 language: "Language:",
+                companies: "Companies",
+                databases: "Databases",
                 quick_queries: "Quick Queries",
                 suggestion_1: "What are our top-performing products?",
                 suggestion_2: "Show customer sentiment analysis",
@@ -464,12 +656,16 @@
                 upload_success: "Document uploaded successfully!",
                 upload_error: "Failed to upload document",
                 delete_document: "Delete",
-                document_category: "Category"
+                document_category: "Category",
+                conversation_history: "Conversation History",
+                clear_all_history: "Clear All History"
             },
             es: {
                 title: "Chatbot de Inteligencia Empresarial",
                 subtitle: "Análisis impulsado por IA de tus datos empresariales",
                 language: "Idioma:",
+                companies: "Empresas",
+                databases: "Bases de Datos",
                 quick_queries: "Consultas Rápidas",
                 suggestion_1: "¿Cuáles son nuestros productos de mejor rendimiento?",
                 suggestion_2: "Mostrar análisis de sentimiento de clientes",
@@ -502,7 +698,9 @@
                 upload_success: "¡Documento subido exitosamente!",
                 upload_error: "Error al subir documento",
                 delete_document: "Eliminar",
-                document_category: "Categoría"
+                document_category: "Categoría",
+                conversation_history: "Historial de Conversaciones",
+                clear_all_history: "Borrar Todo el Historial"
             }
         };
 
@@ -650,6 +848,10 @@
                     indicator.innerHTML = '🏢 No active company - <a href="/companies" class="underline hover:text-white">manage companies</a>';
                     indicator.className = 'mt-2 text-sm text-yellow-200';
                 }
+                
+                // Restore chat history for this company
+                restoreChatHistory();
+                
             } catch (error) {
                 console.error('Error loading company context:', error);
                 const indicator = document.getElementById('current-company-indicator');
@@ -939,6 +1141,326 @@
             const container = document.getElementById('messages-container');
             container.scrollTop = container.scrollHeight;
         }
+
+        // Restore chat history from localStorage
+        function restoreChatHistory() {
+            const historyKey = getChatHistoryKey();
+            const chatHistory = loadChatHistory(historyKey);
+            
+            if (chatHistory && chatHistory.length > 0) {
+                // Clear existing messages
+                messagesContainer.innerHTML = '';
+                
+                // Restore each message
+                chatHistory.forEach(message => {
+                    addMessageToUI(message.content, message.sender, false); // Don't scroll for each restored message
+                });
+                
+                // Scroll to bottom after all messages are restored
+                scrollToBottom();
+            }
+        }
+
+        // Listen for company changes from other windows
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'companyChanged') {
+                loadCurrentCompanyContext();
+            }
+        });
+
+        // ===== CONVERSATION HISTORY MANAGEMENT =====
+        
+        let currentConversationId = null;
+        // currentCompanyId already declared above
+
+        // Load conversation tabs for current company
+        function loadConversationTabs() {
+            const company = getCurrentCompany();
+            if (!company) return;
+
+            currentCompanyId = company.company_id;
+            const conversationsKey = `conversations_${currentCompanyId}`;
+            const conversations = JSON.parse(localStorage.getItem(conversationsKey) || '{}');
+            
+            const tabsContainer = document.getElementById('conversation-tabs');
+            tabsContainer.innerHTML = '';
+
+            // Create a tab for each conversation
+            Object.keys(conversations).forEach(convId => {
+                const conv = conversations[convId];
+                const tab = document.createElement('div');
+                tab.className = `conversation-tab ${convId === currentConversationId ? 'active' : ''}`;
+                tab.onclick = () => switchToConversation(convId);
+                
+                // Truncate long titles
+                const title = conv.title || `Chat ${convId.substring(0, 8)}`;
+                const truncatedTitle = title.length > 15 ? title.substring(0, 15) + '...' : title;
+                
+                tab.innerHTML = `
+                    <span>${truncatedTitle}</span>
+                    <span class="close-btn" onclick="event.stopPropagation(); deleteConversation('${convId}')">&times;</span>
+                `;
+                
+                tabsContainer.appendChild(tab);
+            });
+
+            // Add "New Chat" button
+            const newChatTab = document.createElement('div');
+            newChatTab.className = 'conversation-tab';
+            newChatTab.style.background = 'rgba(34, 197, 94, 0.2)';
+            newChatTab.style.borderColor = 'rgba(34, 197, 94, 0.4)';
+            newChatTab.onclick = startNewConversation;
+            newChatTab.innerHTML = '<span>+ New Chat</span>';
+            tabsContainer.appendChild(newChatTab);
+        }
+
+        // Switch to a specific conversation - MOVED TO ENHANCED VERSION BELOW
+
+        // Start a new conversation
+        function startNewConversation() {
+            const newConversationId = 'conv_' + Date.now();
+            currentConversationId = newConversationId;
+
+            // Save current conversation for this company
+            localStorage.setItem(`currentConversation_${currentCompanyId}`, newConversationId);
+
+            // Clear current messages
+            const messagesContainer = document.getElementById('messages');
+            messagesContainer.innerHTML = '';
+
+            // Create welcome message for new conversation
+            addWelcomeMessage();
+
+            // Create conversation record
+            const conversationsKey = `conversations_${currentCompanyId}`;
+            const conversations = JSON.parse(localStorage.getItem(conversationsKey) || '{}');
+            conversations[newConversationId] = {
+                title: 'New Chat',
+                created: Date.now(),
+                messages: []
+            };
+            localStorage.setItem(conversationsKey, JSON.stringify(conversations));
+
+            loadConversationTabs();
+            populateChatSessions(); // Refresh sidebar chat history
+        }
+
+        // Delete a conversation
+        function deleteConversation(conversationId) {
+            if (!confirm('Delete this conversation?')) return;
+
+            const conversationsKey = `conversations_${currentCompanyId}`;
+            const conversations = JSON.parse(localStorage.getItem(conversationsKey) || '{}');
+            delete conversations[conversationId];
+            localStorage.setItem(conversationsKey, JSON.stringify(conversations));
+
+            // If we deleted the current conversation, start a new one
+            if (conversationId === currentConversationId) {
+                startNewConversation();
+            } else {
+                loadConversationTabs();
+            }
+        }
+
+        // Clear all conversations for current company
+        function clearAllConversations() {
+            if (!confirm('Clear all conversation history for this company?')) return;
+
+            const conversationsKey = `conversations_${currentCompanyId}`;
+            localStorage.removeItem(conversationsKey);
+            startNewConversation();
+        }
+
+        // Enhanced saveMessageToHistory function to work with conversations
+        function saveMessageToHistory(companyId, message, sender, sources = [], sqlQuery = null) {
+            if (!currentConversationId) {
+                startNewConversation();
+            }
+
+            const conversationsKey = `conversations_${companyId}`;
+            const conversations = JSON.parse(localStorage.getItem(conversationsKey) || '{}');
+
+            if (!conversations[currentConversationId]) {
+                conversations[currentConversationId] = {
+                    title: 'New Chat',
+                    created: Date.now(),
+                    messages: []
+                };
+            }
+
+            // Update conversation title with first user message
+            if (sender === 'user' && conversations[currentConversationId].title === 'New Chat') {
+                const title = message.length > 30 ? message.substring(0, 30) + '...' : message;
+                conversations[currentConversationId].title = title;
+            }
+
+            conversations[currentConversationId].messages.push({
+                message,
+                sender,
+                sources,
+                sqlQuery,
+                timestamp: Date.now()
+            });
+
+            localStorage.setItem(conversationsKey, JSON.stringify(conversations));
+            loadConversationTabs(); // Refresh tabs to show updated title
+            populateChatSessions(); // Refresh sidebar chat history
+        }
+
+        // Add welcome message for new conversations
+        function addWelcomeMessage() {
+            const welcomeDiv = document.createElement('div');
+            welcomeDiv.className = 'chat-message';
+            welcomeDiv.innerHTML = `
+                <div class="glass-panel border border-blue-400/30 rounded-xl p-6 shadow-2xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center mr-4">
+                            <i class="fas fa-robot text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white" data-translate="ai_assistant">Business Intelligence Assistant</h3>
+                            <p class="text-blue-200 text-sm" data-translate="status_online">Online</p>
+                        </div>
+                    </div>
+                    <p class="text-white/90 leading-relaxed" data-translate="welcome_message">
+                        Hello! I'm your business intelligence assistant. I can help you analyze your business data, generate reports, and provide insights.
+                    </p>
+                </div>
+            `;
+            document.getElementById('messages').appendChild(welcomeDiv);
+        }
+
+        // Initialize conversation system when company changes OR page loads
+        async function initializeConversationSystem() {
+            const company = await getCurrentCompany();
+            if (!company) return;
+
+            const companyChanged = company.company_id !== currentCompanyId;
+            currentCompanyId = company.company_id;
+            
+            const conversationsKey = `conversations_${currentCompanyId}`;
+            const conversations = JSON.parse(localStorage.getItem(conversationsKey) || '{}');
+            
+            // If company changed, reset conversation
+            if (companyChanged) {
+                currentConversationId = null;
+            }
+            
+            // Always restore conversation state when page loads
+            if (Object.keys(conversations).length === 0) {
+                // No conversations exist, start new one
+                startNewConversation();
+            } else {
+                // Check if we have a saved current conversation for this company
+                const savedConversationId = localStorage.getItem(`currentConversation_${currentCompanyId}`);
+                
+                if (savedConversationId && conversations[savedConversationId]) {
+                    // Restore the saved conversation
+                    switchToConversation(savedConversationId);
+                } else {
+                    // Load the most recent conversation
+                    const sortedConvs = Object.entries(conversations).sort(([,a], [,b]) => b.created - a.created);
+                    switchToConversation(sortedConvs[0][0]);
+                }
+            }
+            
+            loadConversationTabs();
+        }
+
+        // Save current conversation when switching conversations
+        function switchToConversation(conversationId) {
+            if (conversationId === currentConversationId) return;
+
+            currentConversationId = conversationId;
+            
+            // Save current conversation for this company
+            localStorage.setItem(`currentConversation_${currentCompanyId}`, conversationId);
+            
+            // Clear current messages
+            const messagesContainer = document.getElementById('messages');
+            messagesContainer.innerHTML = '';
+
+            // Load conversation history
+            const conversationsKey = `conversations_${currentCompanyId}`;
+            const conversations = JSON.parse(localStorage.getItem(conversationsKey) || '{}');
+            
+            if (conversations[conversationId]) {
+                const messages = conversations[conversationId].messages || [];
+                
+                if (messages.length === 0) {
+                    // Show welcome message for empty conversations
+                    addWelcomeMessage();
+                } else {
+                    // Load existing messages
+                    messages.forEach(msg => {
+                        addMessageToUI(msg.message, msg.sender, msg.sources, msg.sqlQuery, false);
+                    });
+                }
+            }
+
+            // Update active tab
+            loadConversationTabs();
+            populateChatSessions(); // Refresh sidebar chat history
+            scrollToBottom();
+        }
+
+        // Populate chat sessions in the sidebar
+        function populateChatSessions() {
+            const chatSessionsContainer = document.getElementById('chat-sessions');
+            if (!chatSessionsContainer) return;
+
+            const company = getCurrentCompany();
+            if (!company) {
+                chatSessionsContainer.innerHTML = '<p class="text-white/60 text-sm">No company selected</p>';
+                return;
+            }
+
+            const conversationsKey = `conversations_${company.company_id}`;
+            const conversations = JSON.parse(localStorage.getItem(conversationsKey) || '{}');
+            
+            if (Object.keys(conversations).length === 0) {
+                chatSessionsContainer.innerHTML = '<p class="text-white/60 text-sm">No chat history</p>';
+                return;
+            }
+
+            // Sort conversations by creation date (newest first)
+            const sortedConversations = Object.entries(conversations)
+                .sort(([,a], [,b]) => b.created - a.created);
+
+            chatSessionsContainer.innerHTML = sortedConversations.map(([convId, conv]) => {
+                const title = conv.title || `Chat ${convId.substring(5, 13)}`;
+                const messageCount = conv.messages?.length || 0;
+                const isActive = convId === currentConversationId;
+                
+                return `
+                    <div class="chat-session-item ${isActive ? 'active' : ''}" onclick="switchToConversation('${convId}')">
+                        <div class="chat-session-button flex items-center justify-between p-3 bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 rounded-lg cursor-pointer transition-all duration-200">
+                            <div class="flex-1">
+                                <div class="text-white text-sm font-medium truncate">${title}</div>
+                                <div class="text-white/60 text-xs">${messageCount} messages</div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                ${isActive ? '<span class="w-2 h-2 bg-blue-400 rounded-full"></span>' : ''}
+                                <button onclick="event.stopPropagation(); deleteConversation('${convId}')" class="text-red-300 hover:text-red-200 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCurrentCompanyContext();
+            loadDocuments();
+            initializeDocumentManagement();
+            initializeConversationSystem();
+            populateChatSessions();
+        });
     </script>
 </body>
 </html>

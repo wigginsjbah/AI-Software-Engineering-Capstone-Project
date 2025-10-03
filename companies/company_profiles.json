@@ -8,7 +8,7 @@
     "database_file": "companies\\3a0c7db4\\3a0c7db4_database.db",
     "vector_store_path": "companies\\3a0c7db4\\vector_store",
     "created_at": "2025-10-02T19:57:45.427041",
-    "updated_at": "2025-10-02T20:11:36.291549",
+    "updated_at": "2025-10-03T05:39:46.807715",
     "is_active": false,
     "metadata": {}
   },
@@ -21,7 +21,7 @@
     "database_file": "companies\\9ff191df\\9ff191df_database.db",
     "vector_store_path": "companies\\9ff191df\\vector_store",
     "created_at": "2025-10-02T20:57:25.324899",
-    "updated_at": "2025-10-02T20:58:21.307924",
+    "updated_at": "2025-10-03T13:14:09.248552",
     "is_active": false,
     "metadata": {}
   },
@@ -34,8 +34,67 @@
     "database_file": "companies\\47e1d8c4\\47e1d8c4_database.db",
     "vector_store_path": "companies\\47e1d8c4\\vector_store",
     "created_at": "2025-10-02T21:52:55.176256",
-    "updated_at": "2025-10-02T22:10:11.799614",
+    "updated_at": "2025-10-03T14:16:59.420049",
     "is_active": true,
     "metadata": {}
+  },
+  "2b7603a7": {
+    "id": "2b7603a7",
+    "name": "Janelle's Jellybeans",
+    "business_type": "retail",
+    "complexity": "simple",
+    "company_description": "This is a business that sells jellybeans and various other candies.",
+    "database_file": "companies\\2b7603a7\\business_data.db",
+    "vector_store_path": "companies\\2b7603a7\\vector_store",
+    "created_at": "2025-10-03T10:46:11.059714",
+    "updated_at": "2025-10-03T13:02:39.474282",
+    "is_active": false,
+    "metadata": {
+      "generation_type": "enhanced_ai",
+      "data_stats": {
+        "products": 61,
+        "customers": 800,
+        "reviews": 473
+      }
+    }
+  },
+  "ed00dc8f": {
+    "id": "ed00dc8f",
+    "name": "Chariott",
+    "business_type": "retail",
+    "complexity": "simple",
+    "company_description": "Business that sells children's toys.",
+    "database_file": "chariott_database.db",
+    "vector_store_path": "companies\\ed00dc8f\\vector_store",
+    "created_at": "2025-10-03T13:11:51.899722",
+    "updated_at": "2025-10-03T13:12:01.226013",
+    "is_active": false,
+    "metadata": {
+      "generation_type": "enhanced_ai",
+      "data_stats": {
+        "products": 24,
+        "customers": 800,
+        "reviews": 252
+      }
+    }
+  },
+  "dbbcf1ea": {
+    "id": "dbbcf1ea",
+    "name": "Chariott",
+    "business_type": "custom",
+    "complexity": "medium",
+    "company_description": "This business is a hotel chain.",
+    "database_file": "chariott_database.db",
+    "vector_store_path": "companies\\dbbcf1ea\\vector_store",
+    "created_at": "2025-10-03T14:23:04.744900",
+    "updated_at": "2025-10-03T14:23:04.744900",
+    "is_active": false,
+    "metadata": {
+      "generation_type": "file_upload",
+      "uploaded_files": [
+        "employee_management.db"
+      ],
+      "processing_status": "in_progress"
+    }
   }
 }

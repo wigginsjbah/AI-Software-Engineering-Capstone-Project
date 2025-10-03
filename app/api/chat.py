@@ -40,7 +40,7 @@ async def chat_with_business_data(request: ChatRequest) -> ChatResponse:
             sql_query=response.get("sql_query"),
             data_insights=response.get("data_insights", {}),
             session_id=request.session_id,
-            company_context=response.get("company_context")
+            company_context=response.get("company_context") if isinstance(response.get("company_context"), dict) else None
         )
         
     except Exception as e:

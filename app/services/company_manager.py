@@ -211,12 +211,7 @@ class CompanyManager:
             if not company:
                 return False
             
-            # Delete company directory and all files
-            company_dir = self.companies_dir / company_id
-            if company_dir.exists():
-                shutil.rmtree(company_dir)
-            
-            # Remove from profiles
+            # Remove from profiles FIRST before attempting file deletion
             profiles = self._load_profiles()
             if company_id in profiles:
                 del profiles[company_id]
@@ -228,11 +223,117 @@ class CompanyManager:
                 if self.current_company_file.exists():
                     self.current_company_file.unlink()
             
+            # Force close any open database connections to this company's database
+            try:
+                import gc
+                import sqlite3
+                
+                # Get the database path
+                db_path = company.database_file
+                
+                # Force garbage collection to close any lingering connections
+                gc.collect()
+                
+                # Try to close any SQLite connections that might be open
+                if os.path.exists(db_path):
+                    try:
+                        # Create a temporary connection to force unlock, then close immediately
+                        temp_conn = sqlite3.connect(db_path, timeout=0.1)
+                        temp_conn.close()
+                        del temp_conn
+                    except:
+                        pass  # Ignore errors here
+                        
+                    # Force garbage collection again
+                    gc.collect()
+                    
+                    # Wait a moment for file handles to be released
+                    import time
+                    time.sleep(0.2)
+                
+            except Exception as cleanup_error:
+                self.logger.warning(f"Database cleanup warning: {str(cleanup_error)}")
+            
+            # Delete company directory and all files with enhanced retry logic
+            company_dir = self.companies_dir / company_id
+            if company_dir.exists():
+                success = self._delete_company_directory_with_retries(company_dir)
+                if not success:
+                    # Even if file deletion failed, we removed it from profiles
+                    # so it won't show up in the UI anymore
+                    self.logger.warning(f"Company {company_id} removed from profiles but some files may remain")
+            
             self.logger.info(f"Deleted company: {company.name} ({company_id})")
             return True
             
         except Exception as e:
             self.logger.error(f"Error deleting company: {str(e)}")
+            return False
+    
+    def _delete_company_directory_with_retries(self, company_dir: Path) -> bool:
+        """Delete company directory with enhanced retry logic"""
+        max_retries = 5
+        
+        for attempt in range(max_retries):
+            try:
+                shutil.rmtree(company_dir)
+                self.logger.info(f"Successfully deleted directory on attempt {attempt + 1}")
+                return True
+            except OSError as e:
+                if "being used by another process" in str(e) and attempt < max_retries - 1:
+                    self.logger.warning(f"File in use, retrying deletion (attempt {attempt + 1})")
+                    import time
+                    time.sleep(1.0)  # Wait longer between retries
+                    
+                    # Try additional cleanup between retries
+                    try:
+                        import gc
+                        gc.collect()
+                    except:
+                        pass
+                else:
+                    # If all retries failed, try to delete what we can
+                    self.logger.warning(f"Failed to delete directory after {max_retries} attempts: {str(e)}")
+                    return self._partial_delete_directory(company_dir)
+        
+        return False
+    
+    def _partial_delete_directory(self, directory_path: Path) -> bool:
+        """Delete what files we can, leave the rest"""
+        try:
+            deleted_something = False
+            
+            # Try to delete files that aren't locked
+            for item in directory_path.rglob('*'):
+                if item.is_file():
+                    try:
+                        item.unlink()
+                        deleted_something = True
+                        self.logger.info(f"Deleted file: {item}")
+                    except OSError:
+                        self.logger.warning(f"Could not delete locked file: {item}")
+            
+            # Try to remove empty directories
+            for item in sorted(directory_path.rglob('*'), key=lambda p: len(str(p)), reverse=True):
+                if item.is_dir():
+                    try:
+                        item.rmdir()
+                        deleted_something = True
+                    except OSError:
+                        pass  # Directory not empty or locked
+            
+            # Try to remove the main directory
+            try:
+                directory_path.rmdir()
+                deleted_something = True
+                self.logger.info(f"Removed main directory: {directory_path}")
+            except OSError:
+                self.logger.warning(f"Main directory not empty or locked: {directory_path}")
+            
+            return deleted_something
+                
+        except Exception as e:
+            self.logger.error(f"Error in partial delete: {str(e)}")
             return False
     
     def get_company_database_url(self, company_id: str) -> Optional[str]:
@@ -318,13 +419,13 @@ class CompanyManager:
                     
                     # Count tables
                     cursor.execute(
-                        "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_%'"
+                        "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
                     )
                     stats["table_count"] = cursor.fetchone()[0]
                     
                     # Count total records across all tables
                     cursor.execute(
-                        "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_%'"
+                        "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
                     )
                     tables = cursor.fetchall()
                     total_records = 0

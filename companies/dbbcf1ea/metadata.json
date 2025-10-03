@@ -1,0 +1,13 @@
+{
+  "id": "dbbcf1ea",
+  "name": "Chariott",
+  "description": "This business is a hotel chain.",
+  "business_type": "custom",
+  "database_path": "chariott_database.db",
+  "created_at": "2025-10-03T14:23:04.744900",
+  "generation_type": "file_upload",
+  "uploaded_files": [
+    "employee_management.db"
+  ],
+  "processing_status": "in_progress"
+}

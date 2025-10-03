@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 import uvicorn
 
-from app.api import chat, data, health, documents, database_generation, companies, admin, test_generation
+from app.api import chat, data, health, documents, database_generation, companies, admin, test_generation, enhanced_companies
 from app.core.rag_engine import BusinessRAGEngine
 from config.settings import get_settings
 
@@ -41,6 +41,7 @@ app.include_router(data.router, prefix="/api/v1", tags=["data"])
 app.include_router(documents.router)
 app.include_router(database_generation.router, prefix="/api/v1/database", tags=["database-generation"])
 app.include_router(companies.router, prefix="/api", tags=["companies"])
+app.include_router(enhanced_companies.router, prefix="/api", tags=["enhanced-companies"])
 app.include_router(admin.router)
 app.include_router(test_generation.router)  # Test generation with progress tracking
 
@@ -61,8 +62,20 @@ async def root():
 
 @app.get("/companies", response_class=HTMLResponse)
 async def companies():
-    """Serve the unified company and database management interface"""
+    """Serve the companies list and management interface"""
+    with open("frontend/templates/companies.html", "r", encoding="utf-8") as f:
+        return HTMLResponse(content=f.read())
+
+@app.get("/databases", response_class=HTMLResponse)
+async def databases():
+    """Serve the database creation and management interface"""
     with open("frontend/templates/unified_company_manager.html", "r", encoding="utf-8") as f:
+        return HTMLResponse(content=f.read())
+
+@app.get("/manage-companies", response_class=HTMLResponse)
+async def manage_companies():
+    """Serve the company management interface (legacy endpoint)"""
+    with open("frontend/templates/companies.html", "r", encoding="utf-8") as f:
         return HTMLResponse(content=f.read())
 
 @app.get("/database-generator", response_class=HTMLResponse)
@@ -75,6 +88,6 @@ if __name__ == "__main__":
     uvicorn.run(
         "app.main:app",
         host="0.0.0.0",
-        port=8000,
+        port=8005,
         reload=True
     )

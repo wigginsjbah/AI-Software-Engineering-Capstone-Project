@@ -1,0 +1,15 @@
+{
+  "name": "Janelle's Jellybeans",
+  "description": "This is a large corporation that makes lots of money selling jellybeans and various other candies like chocolate, lollipops, taffy,etc.",
+  "business_type": "retail",
+  "complexity": "medium",
+  "database_path": "data\\companies\\janelle's_jellybeans\\business_data.db",
+  "created_at": "2025-10-03T10:05:59.907267",
+  "data_stats": {
+    "products": 63,
+    "customers": 1600,
+    "reviews": 525,
+    "employees": 40
+  },
+  "generation_type": "enhanced_ai"
+}
