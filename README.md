@@ -28,6 +28,14 @@ A comprehensive AI-driven platform that generates custom business databases and 
 - **Trend Analysis Agent**: Market trends and temporal pattern analysis
 - **Report Generator Agent**: Automated business report creation
 
+### 🎨 **Modern React Frontend**
+- **Glassmorphism Design**: Modern glass-like UI with backdrop blur effects
+- **Responsive Layout**: Mobile and desktop optimized interface
+- **Real-time Chat**: Interactive business intelligence conversations
+- **Company Management**: Create and switch between business databases
+- **Data Visualization**: Explore database schemas and sample data
+- **AI-Generated Components**: All React components created with AI assistance
+
 ## 🏗️ System Architecture
 
 ```
@@ -83,14 +91,33 @@ A comprehensive AI-driven platform that generates custom business databases and 
 ├── agents/                # Multi-agent AI system
 │   └── orchestrator.py    # Agent coordination
 ├── rag/                   # RAG system components
-├── frontend/              # Web user interface
+├── react-frontend/        # React user interface
+│   ├── src/               # React source code
+│   │   ├── App.js         # Main React application
+│   │   ├── components/    # React components
+│   │   └── App.css        # Glassmorphism styles
+│   ├── public/            # Static assets
+│   └── package.json       # React dependencies
+├── frontend/              # Legacy vanilla JS interface (backup)
 │   ├── templates/         # HTML templates
 │   └── static/           # CSS, JavaScript, assets
+├── docs/                  # Project documentation
+│   ├── PRD.md            # Product Requirements Document
+│   ├── Architecture_Document.md  # System architecture with UML
+│   ├── Security_Vulnerability_Report.md  # Security analysis
+│   └── adr/              # Architecture Decision Records
+├── tests/                 # Test suite
+│   └── test_main.py      # Comprehensive unit tests
 ├── config/                # Configuration management
 ├── companies/             # Company data storage
 ├── scripts/               # Automation utilities
 ├── data/                  # Sample data and documents
-└── utils/                 # Shared utilities
+├── utils/                 # Shared utilities
+├── vector_store/          # Vector database files
+├── ai_code_artifacts.py   # AI-generated code documentation
+├── PRESENTATION.md        # Presentation slides and demo script
+├── schema.sql            # Database schema example
+└── requirements.txt       # Python dependencies
 ```
 
 ## 🛠️ Quick Start Guide
@@ -117,16 +144,36 @@ The system comes pre-configured with API keys. No additional setup required.
 
 ### 4. Launch the Application
 
+**Backend Server:**
 ```powershell
-# Start the web server
-py -m uvicorn app.main:app --host 127.0.0.1 --port 8002 --reload
+# Start the FastAPI backend
+py -m uvicorn app.main:app --host 127.0.0.1 --port 8010 --reload
 
-# Alternative ports if 8002 is busy
-py -m uvicorn app.main:app --host 127.0.0.1 --port 8003 --reload
+# Alternative ports if 8010 is busy
+py -m uvicorn app.main:app --host 127.0.0.1 --port 8011 --reload
+```
+
+**React Frontend (Recommended):**
+```powershell
+# Navigate to React frontend
+cd react-frontend
+
+# Install React dependencies (first time only)
+npm install
+
+# Start React development server
+npm start
+```
+
+**Legacy Frontend (Alternative):**
+```powershell
+# If React frontend is not available, the FastAPI backend serves
+# a vanilla JS interface at the same URL
 ```
 
 ### 5. Access the Platform
-Open your browser: **http://127.0.0.1:8002**
+- **React Frontend**: http://localhost:3000 (recommended)
+- **Backend API + Legacy Frontend**: http://localhost:8010
 
 ## 🎯 Getting Started - Usage Examples
 
