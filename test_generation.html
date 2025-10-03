@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robust Database Generation Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .progress-bar {
+            transition: width 0.3s ease-in-out;
+        }
+        .stage-indicator {
+            transition: all 0.2s ease-in-out;
+        }
+        .stage-active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .stage-completed {
+            background-color: #10b981;
+            color: white;
+        }
+        .stage-pending {
+            background-color: #e5e7eb;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="max-w-4xl mx-auto py-8 px-4">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h1 class="text-3xl font-bold text-gray-800 mb-6">🚀 Robust Database Generation Test</h1>
+            
+            <div class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h2 class="text-lg font-semibold text-blue-800 mb-2">What this tests:</h2>
+                <ul class="text-blue-700 space-y-1">
+                    <li>• <strong>Multi-stage pipeline:</strong> Schema analysis → Dependency mapping → Sequential generation → Validation</li>
+                    <li>• <strong>Table-by-table generation:</strong> Each table gets dedicated LLM calls with proper context</li>
+                    <li>• <strong>Retry mechanisms:</strong> Failed tables are automatically retried with different strategies</li>
+                    <li>• <strong>Progress tracking:</strong> Real-time updates on generation progress and status</li>
+                </ul>
+            </div>
+            
+            <!-- Generation Form -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Business Type</label>
+                    <select id="businessType" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="healthcare">Healthcare</option>
+                        <option value="ecommerce">E-commerce</option>
+                        <option value="finance">Finance</option>
+                        <option value="education">Education</option>
+                        <option value="retail">Retail</option>
+                        <option value="technology">Technology</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Complexity Level</label>
+                    <select id="complexity" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="simple">Simple (3-5 tables)</option>
+                        <option value="medium" selected>Medium (6-12 tables)</option>
+                        <option value="complex">Complex (13-25 tables)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Company Description</label>
+                <textarea id="companyDescription" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="3" placeholder="Describe the company and its business operations...">Brinton Vision is a comprehensive eye care center providing advanced ophthalmology services, specialized treatments, and patient care management</textarea>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Sample Data Size</label>
+                    <select id="sampleDataSize" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="small">Small (~30 records/table)</option>
+                        <option value="medium" selected>Medium (~50 records/table)</option>
+                        <option value="large">Large (~75 records/table)</option>
+                    </select>
+                </div>
+                
+                <div class="flex items-center">
+                    <input type="checkbox" id="includeSampleData" checked class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                    <label for="includeSampleData" class="ml-2 block text-sm font-medium text-gray-700">Include Sample Data</label>
+                </div>
+            </div>
+            
+            <!-- Start Generation Button -->
+            <button id="startGeneration" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                🚀 Start Robust Database Generation
+            </button>
+            
+            <!-- Progress Section -->
+            <div id="progressSection" class="mt-8 hidden">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Generation Progress</h2>
+                
+                <!-- Progress Bar -->
+                <div class="mb-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm font-medium text-gray-700">Overall Progress</span>
+                        <span id="progressPercent" class="text-sm font-medium text-gray-700">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-3">
+                        <div id="progressBar" class="progress-bar bg-blue-600 h-3 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <!-- Current Status -->
+                <div class="mb-4 p-3 bg-gray-50 rounded-lg">
+                    <div class="text-sm text-gray-600">Current Status:</div>
+                    <div id="currentMessage" class="text-gray-800 font-medium">Ready to start...</div>
+                </div>
+                
+                <!-- Stage Indicators -->
+                <div class="mb-6">
+                    <div class="text-sm font-medium text-gray-700 mb-2">Pipeline Stages:</div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="stage-indicator stage-pending px-3 py-1 rounded-full text-xs font-medium" data-stage="analysis">Analysis</span>
+                        <span class="stage-indicator stage-pending px-3 py-1 rounded-full text-xs font-medium" data-stage="dependency_mapping">Dependencies</span>
+                        <span class="stage-indicator stage-pending px-3 py-1 rounded-full text-xs font-medium" data-stage="data_generation">Data Generation</span>
+                        <span class="stage-indicator stage-pending px-3 py-1 rounded-full text-xs font-medium" data-stage="validation">Validation</span>
+                        <span class="stage-indicator stage-pending px-3 py-1 rounded-full text-xs font-medium" data-stage="completed">Complete</span>
+                    </div>
+                </div>
+                
+                <!-- Generation ID -->
+                <div class="text-xs text-gray-500 mb-4">
+                    Generation ID: <span id="generationId" class="font-mono">-</span>
+                </div>
+            </div>
+            
+            <!-- Results Section -->
+            <div id="resultsSection" class="mt-8 hidden">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Generation Results</h2>
+                <div id="resultsContent" class="bg-gray-50 p-4 rounded-lg"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentGenerationId = null;
+        let progressInterval = null;
+
+        document.getElementById('startGeneration').addEventListener('click', async function() {
+            const button = this;
+            const progressSection = document.getElementById('progressSection');
+            const resultsSection = document.getElementById('resultsSection');
+            
+            // Disable button and show progress
+            button.disabled = true;
+            button.textContent = '🔄 Starting Generation...';
+            progressSection.classList.remove('hidden');
+            resultsSection.classList.add('hidden');
+            
+            // Reset progress
+            resetProgress();
+            
+            try {
+                // Prepare request data
+                const requestData = {
+                    business_type: document.getElementById('businessType').value,
+                    complexity: document.getElementById('complexity').value,
+                    company_description: document.getElementById('companyDescription').value,
+                    sample_data_size: document.getElementById('sampleDataSize').value,
+                    include_sample_data: document.getElementById('includeSampleData').checked
+                };
+                
+                // Start generation
+                const response = await fetch('/api/test-generation/start', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    currentGenerationId = result.generation_id;
+                    document.getElementById('generationId').textContent = currentGenerationId;
+                    
+                    // Start polling for progress
+                    startProgressPolling();
+                } else {
+                    throw new Error(result.detail || 'Failed to start generation');
+                }
+                
+            } catch (error) {
+                console.error('Error starting generation:', error);
+                document.getElementById('currentMessage').textContent = `Error: ${error.message}`;
+                button.disabled = false;
+                button.textContent = '🚀 Start Robust Database Generation';
+            }
+        });
+
+        function resetProgress() {
+            document.getElementById('progressBar').style.width = '0%';
+            document.getElementById('progressPercent').textContent = '0%';
+            document.getElementById('currentMessage').textContent = 'Starting generation...';
+            
+            // Reset stage indicators
+            document.querySelectorAll('.stage-indicator').forEach(el => {
+                el.className = 'stage-indicator stage-pending px-3 py-1 rounded-full text-xs font-medium';
+            });
+        }
+
+        function startProgressPolling() {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+            }
+            
+            progressInterval = setInterval(async () => {
+                if (!currentGenerationId) return;
+                
+                try {
+                    const response = await fetch(`/api/test-generation/progress/${currentGenerationId}`);
+                    const progress = await response.json();
+                    
+                    if (response.ok) {
+                        updateProgress(progress);
+                        
+                        if (progress.completed) {
+                            clearInterval(progressInterval);
+                            progressInterval = null;
+                            onGenerationComplete(progress);
+                        }
+                    } else {
+                        console.error('Error fetching progress:', progress);
+                    }
+                    
+                } catch (error) {
+                    console.error('Error polling progress:', error);
+                }
+            }, 1000); // Poll every second
+        }
+
+        function updateProgress(progress) {
+            // Update progress bar
+            const progressPercent = Math.max(0, Math.min(100, progress.progress));
+            document.getElementById('progressBar').style.width = `${progressPercent}%`;
+            document.getElementById('progressPercent').textContent = `${progressPercent.toFixed(1)}%`;
+            
+            // Update message
+            document.getElementById('currentMessage').textContent = progress.message;
+            
+            // Update stage indicators
+            updateStageIndicators(progress.current_stage);
+        }
+
+        function updateStageIndicators(currentStage) {
+            const stages = ['analysis', 'dependency_mapping', 'data_generation', 'validation', 'completed'];
+            const currentIndex = stages.indexOf(currentStage);
+            
+            document.querySelectorAll('.stage-indicator').forEach((el, index) => {
+                const stage = el.getAttribute('data-stage');
+                const stageIndex = stages.indexOf(stage);
+                
+                if (stageIndex < currentIndex) {
+                    el.className = 'stage-indicator stage-completed px-3 py-1 rounded-full text-xs font-medium';
+                } else if (stage === currentStage) {
+                    el.className = 'stage-indicator stage-active px-3 py-1 rounded-full text-xs font-medium';
+                } else {
+                    el.className = 'stage-indicator stage-pending px-3 py-1 rounded-full text-xs font-medium';
+                }
+            });
+        }
+
+        function onGenerationComplete(progress) {
+            const button = document.getElementById('startGeneration');
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsContent = document.getElementById('resultsContent');
+            
+            // Re-enable button
+            button.disabled = false;
+            button.textContent = '🚀 Start New Generation';
+            
+            // Show results
+            if (progress.result) {
+                resultsSection.classList.remove('hidden');
+                
+                const result = progress.result;
+                let html = `
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                            <div class="bg-white p-3 rounded border">
+                                <div class="text-2xl font-bold text-blue-600">${result.total_tables}</div>
+                                <div class="text-sm text-gray-600">Total Tables</div>
+                            </div>
+                            <div class="bg-white p-3 rounded border">
+                                <div class="text-2xl font-bold text-green-600">${result.populated_tables}</div>
+                                <div class="text-sm text-gray-600">Populated</div>
+                            </div>
+                            <div class="bg-white p-3 rounded border">
+                                <div class="text-2xl font-bold text-purple-600">${result.success_rate}</div>
+                                <div class="text-sm text-gray-600">Success Rate</div>
+                            </div>
+                            <div class="bg-white p-3 rounded border">
+                                <div class="text-xs font-mono text-gray-600">${result.generation_method}</div>
+                                <div class="text-sm text-gray-600">Method</div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Table Population Details:</h3>
+                            <div class="space-y-1">
+                `;
+                
+                result.table_details.forEach(table => {
+                    const statusClass = table.populated ? 'text-green-600' : 'text-red-600';
+                    const statusIcon = table.populated ? '✓' : '✗';
+                    html += `
+                        <div class="flex justify-between items-center py-1 px-2 bg-white rounded text-sm">
+                            <span class="font-medium">${table.table_name}</span>
+                            <span class="${statusClass}">${statusIcon} ${table.record_count} records</span>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                resultsContent.innerHTML = html;
+            } else if (progress.status === 'failed') {
+                resultsSection.classList.remove('hidden');
+                resultsContent.innerHTML = `
+                    <div class="text-red-600 p-4 bg-red-50 rounded border border-red-200">
+                        <h3 class="font-semibold mb-2">Generation Failed</h3>
+                        <p class="text-sm">${progress.message}</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

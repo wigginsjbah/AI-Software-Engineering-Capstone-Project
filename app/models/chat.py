@@ -13,6 +13,7 @@ class ChatRequest(BaseModel):
     include_sources: bool = Field(default=True, description="Whether to include sources in response")
     language: str = Field(default="en", description="Language preference (en/es)")
     context: Optional[Dict[str, Any]] = Field(default=None, description="Additional context")
+    company_id: Optional[str] = Field(default=None, description="Specific company context to use")
 
 class ChatSource(BaseModel):
     """Model for response sources"""
@@ -28,6 +29,7 @@ class ChatResponse(BaseModel):
     sql_query: Optional[str] = Field(default=None, description="SQL query executed (if any)")
     data_insights: Dict[str, Any] = Field(default={}, description="Additional data insights")
     session_id: str = Field(..., description="Chat session identifier")
+    company_context: Optional[Dict[str, Any]] = Field(default=None, description="Company context used")
     confidence: Optional[float] = Field(default=None, description="Overall response confidence")
     response_type: Optional[str] = Field(default=None, description="Type of response generated")
 

@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Generator - AI Business Intelligence</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 1200px;
+            min-height: 600px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content {
+            text-align: left;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-link {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.3);
+            color: white;
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+
+        .main-content {
+            display: flex;
+            min-height: 500px;
+        }
+
+        .form-section {
+            flex: 1;
+            padding: 30px;
+            border-right: 1px solid #eee;
+        }
+
+        .preview-section {
+            flex: 1;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .requirements-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .requirement-item {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .requirement-item input {
+            flex: 1;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .preview-content {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            min-height: 400px;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .preview-header h3 {
+            color: #333;
+            font-size: 1.3em;
+        }
+
+        .schema-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .schema-table th,
+        .schema-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .schema-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: #e9ecef;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            margin-right: 5px;
+        }
+
+        .tab.active {
+            background: white;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .sql-preview {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .form-section {
+                border-right: none;
+                border-bottom: 1px solid #eee;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1>🤖 AI Database Generator</h1>
+                <p>Generate complete database schemas with realistic sample data using AI</p>
+            </div>
+            <div class="header-nav">
+                <a href="/companies" class="nav-link">🏢 Companies</a>
+                <a href="/" class="nav-link">💬 AI Chatbot</a>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="form-section">
+                <form id="generationForm">
+                    <div class="form-group">
+                        <label for="businessType">Business Type</label>
+                        <select id="businessType" name="business_type" required>
+                            <option value="">Select business type...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="complexity">Complexity Level</label>
+                        <select id="complexity" name="complexity" required>
+                            <option value="">Select complexity...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="companyDescription">Company Description</label>
+                        <textarea id="companyDescription" name="company_description" 
+                                placeholder="Describe your business in detail (e.g., 'Online clothing retailer specializing in sustainable fashion for young adults')" 
+                                required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Specific Requirements</label>
+                        <div class="requirements-list" id="requirementsList">
+                            <div class="requirement-item">
+                                <input type="text" placeholder="Enter a specific requirement..." />
+                                <button type="button" class="btn btn-secondary btn-small" onclick="addRequirement()">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sampleDataSize">Sample Data Size</label>
+                        <select id="sampleDataSize" name="sample_data_size">
+                            <option value="small">Small (5-10 records per table)</option>
+                            <option value="medium" selected>Medium (15-25 records per table)</option>
+                            <option value="large">Large (30-50 records per table)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="additionalContext">Additional Context</label>
+                        <textarea id="additionalContext" name="additional_context" 
+                                placeholder="Any additional information about your business model, special requirements, or constraints..."></textarea>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button type="button" class="btn" onclick="previewSchema()">🔍 Preview Schema</button>
+                        <button type="button" class="btn btn-success" onclick="generateDatabase()">🚀 Generate Database</button>
+                        <button type="button" class="btn btn-danger" onclick="deployDatabase()" id="deployBtn" disabled>📦 Deploy to Database</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="preview-section">
+                <div class="preview-content">
+                    <div class="preview-header">
+                        <h3>Schema Preview</h3>
+                    </div>
+                    
+                    <div class="tabs">
+                        <button class="tab active" onclick="showTab('tables')">Tables</button>
+                        <button class="tab" onclick="showTab('sql')">SQL</button>
+                        <button class="tab" onclick="showTab('data')">Sample Data</button>
+                    </div>
+                    
+                    <div id="tablesContent" class="tab-content active">
+                        <div id="tablesPreview">
+                            <p style="text-align: center; color: #666; margin-top: 50px;">
+                                Click "Preview Schema" to see the generated database structure
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div id="sqlContent" class="tab-content">
+                        <div id="sqlPreview">
+                            <p style="text-align: center; color: #666; margin-top: 50px;">
+                                SQL will appear here after schema generation
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div id="dataContent" class="tab-content">
+                        <div id="dataPreview">
+                            <p style="text-align: center; color: #666; margin-top: 50px;">
+                                Sample data will appear here after full generation
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSchema = null;
+        let currentSampleData = null;
+
+        // Load business types and complexity levels on page load
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadBusinessTypes();
+            await loadComplexityLevels();
+        });
+
+        async function loadBusinessTypes() {
+            try {
+                const response = await fetch('/api/v1/database/business-types');
+                const data = await response.json();
+                
+                const select = document.getElementById('businessType');
+                data.business_types.forEach(type => {
+                    const option = document.createElement('option');
+                    option.value = type.value;
+                    option.textContent = type.label;
+                    option.title = type.description;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading business types:', error);
+            }
+        }
+
+        async function loadComplexityLevels() {
+            try {
+                const response = await fetch('/api/v1/database/complexity-levels');
+                const data = await response.json();
+                
+                const select = document.getElementById('complexity');
+                data.complexity_levels.forEach(level => {
+                    const option = document.createElement('option');
+                    option.value = level.value;
+                    option.textContent = `${level.label} (${level.estimated_tables})`;
+                    option.title = level.description;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading complexity levels:', error);
+            }
+        }
+
+        function addRequirement() {
+            const list = document.getElementById('requirementsList');
+            const newItem = document.createElement('div');
+            newItem.className = 'requirement-item';
+            newItem.innerHTML = `
+                <input type="text" placeholder="Enter a specific requirement..." />
+                <button type="button" class="btn btn-danger btn-small" onclick="removeRequirement(this)">×</button>
+            `;
+            list.appendChild(newItem);
+        }
+
+        function removeRequirement(button) {
+            button.parentElement.remove();
+        }
+
+        // Helper function to add timeout to fetch requests
+        async function fetchWithTimeout(url, options, timeout = 120000) { // 2 minutes default
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+            
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    signal: controller.signal
+                });
+                clearTimeout(id);
+                return response;
+            } catch (error) {
+                clearTimeout(id);
+                if (error.name === 'AbortError') {
+                    throw new Error('Request timed out. Database generation is taking longer than expected. Please try with a simpler description or lower complexity.');
+                }
+                throw error;
+            }
+        }
+
+        function getFormData() {
+            const requirements = Array.from(document.querySelectorAll('.requirement-item input'))
+                .map(input => input.value.trim())
+                .filter(value => value.length > 0);
+
+            return {
+                business_type: document.getElementById('businessType').value,
+                complexity: document.getElementById('complexity').value,
+                company_description: document.getElementById('companyDescription').value,
+                specific_requirements: requirements,
+                sample_data_size: document.getElementById('sampleDataSize').value,
+                additional_context: document.getElementById('additionalContext').value
+            };
+        }
+
+        async function previewSchema() {
+            const formData = getFormData();
+            
+            if (!formData.business_type || !formData.complexity || !formData.company_description) {
+                showError('Please fill in all required fields');
+                return;
+            }
+
+            showLoading('Generating schema preview...');
+
+            try {
+                const response = await fetchWithTimeout('/api/v1/database/generate/preview', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                }, 60000); // 1 minute timeout for preview
+
+                const result = await response.json();
+
+                if (result.success) {
+                    currentSchema = result.schema;
+                    displaySchema(result.schema);
+                    showSuccess(`Schema generated successfully in ${result.generation_time_seconds}s`);
+                } else {
+                    // Improved error message handling
+                    let errorMessage = 'Failed to generate schema';
+                    if (result.error) {
+                        errorMessage = result.error;
+                    } else if (result.detail) {
+                        errorMessage = result.detail;
+                    } else if (result.message) {
+                        errorMessage = result.message;
+                    } else if (typeof result === 'object') {
+                        // Extract meaningful information from error object
+                        const keys = Object.keys(result);
+                        if (keys.length > 0) {
+                            const firstKey = keys[0];
+                            const firstValue = result[firstKey];
+                            if (typeof firstValue === 'string') {
+                                errorMessage = `${firstKey}: ${firstValue}`;
+                            } else {
+                                errorMessage = `Schema generation failed - ${keys.join(', ')} in response`;
+                            }
+                        }
+                    }
+                    showError(errorMessage);
+                    console.error('Full error details:', result);
+                }
+            } catch (error) {
+                let errorMessage = 'Error generating schema: ' + error.message;
+                if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                    errorMessage = 'Cannot connect to server. Please ensure the server is running.';
+                } else if (error.message.includes('JSON')) {
+                    errorMessage = 'Server returned invalid response format.';
+                } else if (error.message.includes('NetworkError')) {
+                    errorMessage = 'Network connection failed. Check your internet connection.';
+                }
+                showError(errorMessage);
+                console.error('Network/Request error:', error);
+            }
+        }
+
+        async function generateDatabase() {
+            const formData = getFormData();
+            
+            if (!formData.business_type || !formData.complexity || !formData.company_description) {
+                showError('Please fill in all required fields');
+                return;
+            }
+
+            formData.include_sample_data = true;
+
+            showLoading('Generating complete database...');
+
+            try {
+                const response = await fetchWithTimeout('/api/v1/database/generate/full', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                }, 180000); // 3 minutes timeout for full generation
+
+                const result = await response.json();
+
+                if (result.success) {
+                    currentSchema = result.schema;
+                    currentSampleData = result.sample_data;
+                    displaySchema(result.schema);
+                    displaySampleData(result.sample_data);
+                    document.getElementById('deployBtn').disabled = false;
+                    showSuccess(`Database generated successfully in ${result.generation_time_seconds}s`);
+                } else {
+                    // Improved error message handling
+                    let errorMessage = 'Failed to generate database';
+                    if (result.error) {
+                        errorMessage = result.error;
+                    } else if (result.detail) {
+                        errorMessage = result.detail;
+                    } else if (result.message) {
+                        errorMessage = result.message;
+                    } else if (typeof result === 'object') {
+                        // Extract meaningful information from error object
+                        const keys = Object.keys(result);
+                        if (keys.length > 0) {
+                            const firstKey = keys[0];
+                            const firstValue = result[firstKey];
+                            if (typeof firstValue === 'string') {
+                                errorMessage = `${firstKey}: ${firstValue}`;
+                            } else {
+                                errorMessage = `Database generation failed - ${keys.join(', ')} in response`;
+                            }
+                        }
+                    }
+                    showError(errorMessage);
+                    console.error('Full error details:', result);
+                }
+            } catch (error) {
+                let errorMessage = 'Error generating database: ' + error.message;
+                if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                    errorMessage = 'Cannot connect to server. Please ensure the server is running.';
+                } else if (error.message.includes('JSON')) {
+                    errorMessage = 'Server returned invalid response format.';
+                } else if (error.message.includes('NetworkError')) {
+                    errorMessage = 'Network connection failed. Check your internet connection.';
+                }
+                showError(errorMessage);
+                console.error('Network/Request error:', error);
+            }
+        }
+
+        async function deployDatabase() {
+            if (!currentSchema) {
+                showError('No schema to deploy. Please generate a database first.');
+                return;
+            }
+
+            if (!confirm('This will replace your current database. Are you sure?')) {
+                return;
+            }
+
+            showLoading('Deploying to database...');
+
+            try {
+                const response = await fetchWithTimeout('/api/v1/database/deploy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        schema: currentSchema,
+                        sample_data: currentSampleData,
+                        backup_existing: true,
+                        validate_first: true
+                    })
+                }, 90000); // 1.5 minutes timeout for deployment
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showSuccess(`Database deployed successfully! Created ${result.tables_created} tables with ${result.records_inserted} records.`);
+                } else {
+                    // Improved error message handling
+                    let errorMessage = 'Failed to deploy database';
+                    if (result.error) {
+                        errorMessage = result.error;
+                    } else if (result.detail) {
+                        errorMessage = result.detail;
+                    } else if (result.message) {
+                        errorMessage = result.message;
+                    } else if (typeof result === 'object') {
+                        // Extract meaningful information from error object
+                        const keys = Object.keys(result);
+                        if (keys.length > 0) {
+                            const firstKey = keys[0];
+                            const firstValue = result[firstKey];
+                            if (typeof firstValue === 'string') {
+                                errorMessage = `${firstKey}: ${firstValue}`;
+                            } else {
+                                errorMessage = `Database deployment failed - ${keys.join(', ')} in response`;
+                            }
+                        }
+                    }
+                    showError(errorMessage);
+                    console.error('Full error details:', result);
+                }
+            } catch (error) {
+                let errorMessage = 'Error deploying database: ' + error.message;
+                if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                    errorMessage = 'Cannot connect to server. Please ensure the server is running.';
+                } else if (error.message.includes('JSON')) {
+                    errorMessage = 'Server returned invalid response format.';
+                } else if (error.message.includes('NetworkError')) {
+                    errorMessage = 'Network connection failed. Check your internet connection.';
+                }
+                showError(errorMessage);
+                console.error('Network/Request error:', error);
+            }
+        }
+
+        function displaySchema(schema) {
+            const tablesDiv = document.getElementById('tablesPreview');
+            const sqlDiv = document.getElementById('sqlPreview');
+
+            // Display tables
+            let tablesHtml = '';
+            schema.tables.forEach(table => {
+                tablesHtml += `
+                    <h4>${table.name}</h4>
+                    <table class="schema-table">
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${table.columns.map(col => `
+                                <tr>
+                                    <td>${col.name}</td>
+                                    <td>${col.type}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            });
+            tablesDiv.innerHTML = tablesHtml;
+
+            // Display SQL
+            sqlDiv.innerHTML = `<div class="sql-preview">${schema.raw_sql}</div>`;
+        }
+
+        function displaySampleData(sampleData) {
+            const dataDiv = document.getElementById('dataPreview');
+            
+            let dataHtml = '';
+            Object.entries(sampleData).forEach(([tableName, records]) => {
+                if (records.length > 0) {
+                    const columns = Object.keys(records[0]);
+                    dataHtml += `
+                        <h4>${tableName} (${records.length} records)</h4>
+                        <table class="schema-table">
+                            <thead>
+                                <tr>
+                                    ${columns.map(col => `<th>${col}</th>`).join('')}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${records.slice(0, 5).map(record => `
+                                    <tr>
+                                        ${columns.map(col => `<td>${record[col]}</td>`).join('')}
+                                    </tr>
+                                `).join('')}
+                                ${records.length > 5 ? `<tr><td colspan="${columns.length}">... and ${records.length - 5} more records</td></tr>` : ''}
+                            </tbody>
+                        </table>
+                    `;
+                }
+            });
+            
+            dataDiv.innerHTML = dataHtml || '<p>No sample data generated</p>';
+        }
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName + 'Content').classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        function showLoading(message) {
+            const previewDiv = document.getElementById('tablesPreview');
+            previewDiv.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>${message}</p>
+                    <p style="font-size: 0.9em; color: #666; margin-top: 10px;">
+                        This may take 30-60 seconds. Please be patient...
+                    </p>
+                </div>
+            `;
+        }
+
+        function showError(message) {
+            const previewDiv = document.getElementById('tablesPreview');
+            previewDiv.innerHTML = `
+                <div class="error">
+                    <strong>❌ Error:</strong> ${message}
+                    <br><br>
+                    <small>
+                        <strong>Tips:</strong>
+                        <ul style="text-align: left; margin: 10px 0;">
+                            <li>Make sure your company description is detailed and specific</li>
+                            <li>Try a simpler complexity level if generation fails</li>
+                            <li>Check that the server is running and API keys are configured</li>
+                            <li>Review the browser console for additional details</li>
+                        </ul>
+                    </small>
+                </div>
+            `;
+        }
+
+        function showSuccess(message) {
+            const previewDiv = document.getElementById('tablesPreview');
+            previewDiv.innerHTML = `<div class="success">✅ ${message}</div>` + previewDiv.innerHTML;
+        }
+    </script>
+</body>
+</html>

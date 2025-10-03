@@ -76,16 +76,17 @@ class BusinessRAGEngine:
         query: str, 
         session_id: str = "default",
         include_sources: bool = True,
-        language: str = "en"
+        language: str = "en",
+        company_id: str = None
     ) -> Dict[str, Any]:
         """
-        Main query processing pipeline
+        Main query processing pipeline with company context support
         """
         if not self.initialized:
             await self.initialize()
         
         try:
-            self.logger.info(f"Processing query: {query}")
+            self.logger.info(f"Processing query: {query} (Company: {company_id or 'default'})")
             
             # Step 1: Analyze query intent and type
             query_analysis = await self.query_processor.analyze_query(query)
@@ -93,12 +94,13 @@ class BusinessRAGEngine:
             # Step 2: Determine if we need external research (Tavily)
             needs_external_data = query_analysis.get("needs_external_research", False)
             
-            # Step 3: Build context from multiple sources
+            # Step 3: Build context from multiple sources with company awareness
             context = await self.context_builder.build_context(
                 query=query,
                 query_analysis=query_analysis,
                 session_id=session_id,
-                use_tavily=needs_external_data
+                use_tavily=needs_external_data,
+                company_id=company_id
             )
             
             # Step 4: Generate response using appropriate agent
@@ -112,14 +114,15 @@ class BusinessRAGEngine:
             # Step 5: Store conversation history
             await self._store_chat_history(session_id, query, response)
             
-            # Step 6: Format final response
+            # Step 6: Format final response with company context
             formatted_response = {
                 "message": response["message"],
                 "sources": response.get("sources", []) if include_sources else [],
                 "sql_query": response.get("sql_query"),
                 "data_insights": response.get("data_insights", {}),
                 "query_type": query_analysis.get("type"),
-                "confidence": response.get("confidence", 0.8)
+                "confidence": response.get("confidence", 0.8),
+                "company_context": context.get("company_context")
             }
             
             return formatted_response

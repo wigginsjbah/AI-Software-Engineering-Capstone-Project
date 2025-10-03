@@ -18,17 +18,18 @@ class DatabaseManager:
     Manages database connections and operations
     """
     
-    def __init__(self):
+    def __init__(self, database_url: Optional[str] = None):
         self.settings = get_settings()
         self.logger = get_logger(__name__)
         self.engine: Optional[create_async_engine] = None
         self.session_factory: Optional[async_sessionmaker] = None
+        self.database_url = database_url or self.settings.DATABASE_URL
     
     async def initialize(self):
         """Initialize database connection"""
         try:
             # Convert SQLite URL to async if needed
-            db_url = self.settings.DATABASE_URL
+            db_url = self.database_url
             if db_url.startswith("sqlite:///"):
                 db_url = db_url.replace("sqlite:///", "sqlite+aiosqlite:///")
             
