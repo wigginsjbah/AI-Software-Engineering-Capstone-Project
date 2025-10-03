@@ -11,26 +11,41 @@
 <body class="gradient-bg h-screen flex flex-col overflow-hidden">
     <!-- Floating Particles -->
     <div id="particles-container"></div>
-    <!-- Header -->
     <div class="header-glass bg-blue-600/80 backdrop-blur-lg border-b border-white/10 text-white p-6 shadow-2xl">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="header-content">
                 <h1 class="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-cyan-200 bg-clip-text text-transparent animate-pulse" data-translate="title">Business Intelligence Chatbot</h1>
                 <p class="text-blue-100/90 text-lg mt-2 font-light" data-translate="subtitle">AI-powered insights from your business data</p>
+                <!-- Company Context Indicator -->
+                <div id="company-context" class="mt-2 text-sm text-blue-200/90">
+                    <span id="current-company-indicator">Loading company context...</span>
+                </div>
             </div>
-            <!-- Language Toggle -->
+            <!-- Navigation & Language Toggle -->
             <div class="flex items-center space-x-4">
-                <span class="text-sm text-blue-100/90 font-medium" data-translate="language">Language:</span>
-                <button 
-                    id="language-toggle"
-                    onclick="toggleLanguage()" 
-                    class="modern-button bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center space-x-2 hover:scale-105 active:scale-95"
-                >
-                    <span id="current-lang">EN</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                    </svg>
-                </button>
+                <!-- Navigation Links -->
+                <div class="flex space-x-2">
+                    <a href="/companies" class="modern-button bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center space-x-2 hover:scale-105 active:scale-95">
+                        🏢 Companies
+                    </a>
+                    <a href="/database-generator" class="modern-button bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center space-x-2 hover:scale-105 active:scale-95">
+                        📊 Database Generator
+                    </a>
+                </div>
+                <!-- Language Toggle -->
+                <div class="flex items-center space-x-3">
+                    <span class="text-sm text-blue-100/90 font-medium" data-translate="language">Language:</span>
+                    <button 
+                        id="language-toggle"
+                        onclick="toggleLanguage()" 
+                        class="modern-button bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center space-x-2 hover:scale-105 active:scale-95"
+                    >
+                        <span id="current-lang">EN</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -196,6 +211,22 @@
             }
         }
 
+        // Get current company context
+        async function getCurrentCompany() {
+            try {
+                const response = await fetch('/api/companies/current');
+                if (response.ok) {
+                    const companyData = await response.json();
+                    console.log('Current company data:', companyData);
+                    return companyData;
+                }
+                console.log('No current company response:', response.status);
+            } catch (error) {
+                console.error('Error getting current company:', error);
+            }
+            return null;
+        }
+
         // Send message function
         async function sendMessage() {
             const input = document.getElementById('message-input');
@@ -209,16 +240,24 @@
             setLoading(true);
             
             try {
+                // Get current company context
+                const currentCompany = await getCurrentCompany();
+                console.log('Sending message with company:', currentCompany);
+                
+                const requestBody = {
+                    message: message,
+                    session_id: sessionId,
+                    include_sources: document.getElementById('include-sources').checked,
+                    company_id: currentCompany?.company_id || null
+                };
+                console.log('Chat request body:', requestBody);
+                
                 const response = await fetch('/api/v1/chat', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        message: message,
-                        session_id: sessionId,
-                        include_sources: document.getElementById('include-sources').checked
-                    })
+                    body: JSON.stringify(requestBody)
                 });
                 
                 const data = await response.json();
@@ -582,6 +621,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             updateLanguageDisplay();
             updateTranslations();
+            loadCurrentCompanyContext();
             
             // Update suggestion button click handlers to use current text
             const suggestionButtons = document.querySelectorAll('.suggestion-btn');
@@ -596,6 +636,27 @@
             initializeDocumentManagement();
             loadDocuments();
         });
+
+        // Load and display current company context
+        async function loadCurrentCompanyContext() {
+            try {
+                const company = await getCurrentCompany();
+                const indicator = document.getElementById('current-company-indicator');
+                
+                if (company && company.company_id) {
+                    indicator.innerHTML = `🏢 Active Company: <strong>${company.company_name}</strong> (${company.business_type})`;
+                    indicator.className = 'mt-2 text-sm text-blue-200';
+                } else {
+                    indicator.innerHTML = '🏢 No active company - <a href="/companies" class="underline hover:text-white">manage companies</a>';
+                    indicator.className = 'mt-2 text-sm text-yellow-200';
+                }
+            } catch (error) {
+                console.error('Error loading company context:', error);
+                const indicator = document.getElementById('current-company-indicator');
+                indicator.innerHTML = '⚠️ Unable to load company context';
+                indicator.className = 'mt-2 text-sm text-red-200';
+            }
+        }
 
         // Document Management Functions
         function initializeDocumentManagement() {

@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 import uvicorn
 
-from app.api import chat, data, health, documents
+from app.api import chat, data, health, documents, database_generation, companies, admin, test_generation
 from app.core.rag_engine import BusinessRAGEngine
 from config.settings import get_settings
 
@@ -39,20 +39,36 @@ app.include_router(health.router, prefix="/api/v1", tags=["health"])
 app.include_router(chat.router, prefix="/api/v1", tags=["chat"])
 app.include_router(data.router, prefix="/api/v1", tags=["data"])
 app.include_router(documents.router)
+app.include_router(database_generation.router, prefix="/api/v1/database", tags=["database-generation"])
+app.include_router(companies.router, prefix="/api", tags=["companies"])
+app.include_router(admin.router)
+app.include_router(test_generation.router)  # Test generation with progress tracking
 
 # Initialize RAG engine
 rag_engine = BusinessRAGEngine()
 
-@app.on_event("startup")
-async def startup_event():
-    """Initialize the application on startup"""
-    await rag_engine.initialize()
-    print("Business RAG Chatbot initialized successfully!")
+# @app.on_event("startup")
+# async def startup_event():
+#     """Initialize the application on startup"""
+#     await rag_engine.initialize()
+#     print("Business RAG Chatbot initialized successfully!")
 
 @app.get("/", response_class=HTMLResponse)
 async def root():
     """Serve the main chat interface"""
     with open("frontend/templates/index.html", "r", encoding="utf-8") as f:
+        return HTMLResponse(content=f.read())
+
+@app.get("/companies", response_class=HTMLResponse)
+async def companies():
+    """Serve the unified company and database management interface"""
+    with open("frontend/templates/unified_company_manager.html", "r", encoding="utf-8") as f:
+        return HTMLResponse(content=f.read())
+
+@app.get("/database-generator", response_class=HTMLResponse)
+async def database_generator():
+    """Redirect to unified company manager (legacy endpoint for compatibility)"""
+    with open("frontend/templates/unified_company_manager.html", "r", encoding="utf-8") as f:
         return HTMLResponse(content=f.read())
 
 if __name__ == "__main__":

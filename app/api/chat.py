@@ -30,7 +30,8 @@ async def chat_with_business_data(request: ChatRequest) -> ChatResponse:
             query=request.message,
             session_id=request.session_id,
             include_sources=request.include_sources,
-            language=request.language
+            language=request.language,
+            company_id=request.company_id
         )
         
         return ChatResponse(
@@ -38,7 +39,8 @@ async def chat_with_business_data(request: ChatRequest) -> ChatResponse:
             sources=response.get("sources", []),
             sql_query=response.get("sql_query"),
             data_insights=response.get("data_insights", {}),
-            session_id=request.session_id
+            session_id=request.session_id,
+            company_context=response.get("company_context")
         )
         
     except Exception as e:

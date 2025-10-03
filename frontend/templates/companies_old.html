@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Management - Business Intelligence Platform</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        /* Company Management Specific Styles */
+        .company-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .company-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .company-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        
+        .company-card.active {
+            border-color: #4CAF50;
+            background: linear-gradient(135deg, #f8fff8 0%, #ffffff 100%);
+        }
+        
+        .company-card.active::before {
+            content: "ACTIVE";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #4CAF50;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            font-weight: bold;
+        }
+        
+        .company-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+        
+        .company-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+        
+        .company-id {
+            font-size: 0.8em;
+            color: #666;
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        .company-meta {
+            margin: 10px 0;
+        }
+        
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+        
+        .meta-label {
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .meta-value {
+            color: #333;
+            text-align: right;
+        }
+        
+        .business-type {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+        }
+        
+        .complexity {
+            background: #fff3e0;
+            color: #ef6c00;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+        }
+        
+        .company-description {
+            margin: 15px 0;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            font-size: 0.9em;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .company-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+            font-size: 0.85em;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 8px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+        
+        .stat-number {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #333;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 2px;
+        }
+        
+        .company-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .btn-switch {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85em;
+            flex: 1;
+        }
+        
+        .btn-switch:hover {
+            background: #45a049;
+        }
+        
+        .btn-switch:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .btn-edit, .btn-delete, .btn-generate {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        
+        .btn-edit {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .btn-delete {
+            background: #f44336;
+            color: white;
+        }
+        
+        .btn-generate {
+            background: #ff9800;
+            color: white;
+        }
+        
+        .create-company-form {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+        
+        .form-group textarea {
+            height: 80px;
+            resize: vertical;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .current-company-banner {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .current-company-info {
+            flex: 1;
+        }
+        
+        .current-company-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .current-company-details {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .btn-nav {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-nav:hover {
+            background: rgba(255,255,255,0.3);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+        
+        .empty-state-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .modal-close:hover {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🏢 Company Management</h1>
+            <p>Manage multiple business contexts and switch between company databases</p>
+        </header>
+
+        <!-- Current Company Banner -->
+        <div id="currentCompanyBanner" class="current-company-banner" style="display: none;">
+            <div class="current-company-info">
+                <div class="current-company-name" id="currentCompanyName">-</div>
+                <div class="current-company-details" id="currentCompanyDetails">-</div>
+            </div>
+            <div>
+                <a href="/database-generator" class="btn-nav">📊 Database Generator</a>
+                <a href="/" class="btn-nav">💬 AI Chatbot</a>
+            </div>
+        </div>
+
+        <!-- Create Company Form -->
+        <div class="create-company-form">
+            <h2>Create New Company</h2>
+            <form id="createCompanyForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="companyName">Company Name *</label>
+                        <input type="text" id="companyName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="businessType">Business Type *</label>
+                        <select id="businessType" name="business_type" required>
+                            <option value="">Select business type...</option>
+                            <option value="retail">Retail</option>
+                            <option value="healthcare">Healthcare</option>
+                            <option value="finance">Finance</option>
+                            <option value="education">Education</option>
+                            <option value="technology">Technology</option>
+                            <option value="manufacturing">Manufacturing</option>
+                            <option value="hospitality">Hospitality</option>
+                            <option value="real_estate">Real Estate</option>
+                            <option value="consulting">Consulting</option>
+                            <option value="ecommerce">E-commerce</option>
+                            <option value="logistics">Logistics</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="complexity">Complexity Level *</label>
+                        <select id="complexity" name="complexity" required>
+                            <option value="">Select complexity...</option>
+                            <option value="simple">Simple - Basic operations</option>
+                            <option value="medium">Medium - Standard business</option>
+                            <option value="complex">Complex - Advanced features</option>
+                            <option value="enterprise">Enterprise - Large scale</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="industryDescription">Company Description *</label>
+                    <textarea id="industryDescription" name="company_description" 
+                             placeholder="Describe the specific industry focus, target market, and key business operations..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <span id="createButtonText">Create Company</span>
+                    <span id="createButtonSpinner" class="loading-spinner" style="display: none;"></span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Companies Grid -->
+        <div id="companiesSection">
+            <h2>Your Companies</h2>
+            <div id="companiesGrid" class="company-grid">
+                <!-- Companies will be loaded here -->
+            </div>
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-state-icon">🏢</div>
+                <h3>No Companies Yet</h3>
+                <p>Create your first company to get started with the business intelligence platform.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3>Edit Company</h3>
+            <form id="editCompanyForm">
+                <input type="hidden" id="editCompanyId">
+                <div class="form-group">
+                    <label for="editCompanyName">Company Name</label>
+                    <input type="text" id="editCompanyName" name="name">
+                </div>
+                <div class="form-group">
+                    <label for="editIndustryDescription">Company Description</label>
+                    <textarea id="editIndustryDescription" name="company_description"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Company</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="generateModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3>Generate Database</h3>
+            <form id="generateDatabaseForm">
+                <input type="hidden" id="generateCompanyId">
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="includeSampleData" checked>
+                        Include Sample Data (adds 1-2 minutes)
+                    </label>
+                    <small style="color: #666; display: block; margin-top: 5px;">
+                        Uncheck for faster schema-only generation (~30 seconds)
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="businessRequirements">Additional Business Requirements</label>
+                    <textarea id="businessRequirements" name="business_requirements" 
+                             placeholder="Add specific requirements for database generation..."></textarea>
+                </div>
+                <div class="form-group">
+                    <small style="color: #666;">
+                        <strong>Expected time:</strong> 
+                        <span id="timeEstimate">30 seconds - 2 minutes</span> depending on complexity and options
+                    </small>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <span id="generateButtonText">Generate Database</span>
+                    <span id="generateButtonSpinner" class="loading-spinner" style="display: none;"></span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        class CompanyManager {
+            constructor() {
+                this.currentCompany = null;
+                this.companies = [];
+                this.init();
+            }
+
+            async init() {
+                await this.loadCurrentCompany();
+                await this.loadCompanies();
+                this.setupEventListeners();
+            }
+
+            async loadCurrentCompany() {
+                try {
+                    const response = await fetch('/api/companies/current');
+                    if (response.ok) {
+                        this.currentCompany = await response.json();
+                        this.updateCurrentCompanyBanner();
+                    }
+                } catch (error) {
+                    console.error('Error loading current company:', error);
+                }
+            }
+
+            async loadCompanies() {
+                try {
+                    const response = await fetch('/api/companies/');
+                    if (response.ok) {
+                        const data = await response.json();
+                        this.companies = data.companies;
+                        this.renderCompanies();
+                    }
+                } catch (error) {
+                    console.error('Error loading companies:', error);
+                    this.showError('Failed to load companies');
+                }
+            }
+
+            updateCurrentCompanyBanner() {
+                const banner = document.getElementById('currentCompanyBanner');
+                const nameEl = document.getElementById('currentCompanyName');
+                const detailsEl = document.getElementById('currentCompanyDetails');
+
+                if (this.currentCompany && this.currentCompany.company_id) {
+                    nameEl.textContent = this.currentCompany.company_name;
+                    detailsEl.textContent = `${this.currentCompany.business_type} • ${this.currentCompany.complexity}`;
+                    banner.style.display = 'flex';
+                } else {
+                    banner.style.display = 'none';
+                }
+            }
+
+            renderCompanies() {
+                const grid = document.getElementById('companiesGrid');
+                const emptyState = document.getElementById('emptyState');
+
+                if (this.companies.length === 0) {
+                    grid.style.display = 'none';
+                    emptyState.style.display = 'block';
+                    return;
+                }
+
+                grid.style.display = 'grid';
+                emptyState.style.display = 'none';
+
+                grid.innerHTML = this.companies.map(company => this.renderCompanyCard(company)).join('');
+            }
+
+            renderCompanyCard(company) {
+                const isActive = company.is_active;
+                const createdDate = new Date(company.created_at).toLocaleDateString();
+
+                return `
+                    <div class="company-card ${isActive ? 'active' : ''}" data-company-id="${company.id}">
+                        <div class="company-header">
+                            <h3 class="company-name">${company.name}</h3>
+                            <div class="company-id">${company.id}</div>
+                        </div>
+                        
+                        <div class="company-meta">
+                            <div class="meta-row">
+                                <span class="meta-label">Type:</span>
+                                <span class="meta-value">
+                                    <span class="business-type">${company.business_type}</span>
+                                </span>
+                            </div>
+                            <div class="meta-row">
+                                <span class="meta-label">Complexity:</span>
+                                <span class="meta-value">
+                                    <span class="complexity">${company.complexity}</span>
+                                </span>
+                            </div>
+                            <div class="meta-row">
+                                <span class="meta-label">Created:</span>
+                                <span class="meta-value">${createdDate}</span>
+                            </div>
+                        </div>
+
+                        <div class="company-description">
+                            ${company.company_description.substring(0, 150)}${company.company_description.length > 150 ? '...' : ''}
+                        </div>
+
+                        <div class="company-stats" id="stats-${company.id}">
+                            <div class="stat-item">
+                                <div class="stat-number">-</div>
+                                <div class="stat-label">Tables</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">-</div>
+                                <div class="stat-label">Records</div>
+                            </div>
+                        </div>
+
+                        <div class="company-actions">
+                            <button class="btn-switch" onclick="companyManager.switchCompany('${company.id}')" 
+                                    ${isActive ? 'disabled' : ''}>
+                                ${isActive ? 'Current' : 'Switch To'}
+                            </button>
+                            <button class="btn-generate" onclick="companyManager.showGenerateModal('${company.id}')">
+                                Generate DB
+                            </button>
+                            <button class="btn-edit" onclick="companyManager.showEditModal('${company.id}')">
+                                Edit
+                            </button>
+                            <button class="btn-delete" onclick="companyManager.deleteCompany('${company.id}')">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            async switchCompany(companyId) {
+                try {
+                    const response = await fetch('/api/companies/switch', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ company_id: companyId })
+                    });
+
+                    if (response.ok) {
+                        this.currentCompany = await response.json();
+                        this.updateCurrentCompanyBanner();
+                        await this.loadCompanies(); // Refresh to update active states
+                        this.showSuccess('Company switched successfully!');
+                    } else {
+                        throw new Error('Failed to switch company');
+                    }
+                } catch (error) {
+                    console.error('Error switching company:', error);
+                    this.showError('Failed to switch company');
+                }
+            }
+
+            showEditModal(companyId) {
+                const company = this.companies.find(c => c.id === companyId);
+                if (!company) return;
+
+                document.getElementById('editCompanyId').value = company.id;
+                document.getElementById('editCompanyName').value = company.name;
+                document.getElementById('editIndustryDescription').value = company.company_description;
+                document.getElementById('editModal').style.display = 'block';
+            }
+
+            showGenerateModal(companyId) {
+                document.getElementById('generateCompanyId').value = companyId;
+                document.getElementById('businessRequirements').value = '';
+                document.getElementById('generateModal').style.display = 'block';
+            }
+
+            async deleteCompany(companyId) {
+                const company = this.companies.find(c => c.id === companyId);
+                if (!company) return;
+
+                if (!confirm(`Are you sure you want to delete "${company.name}"? This action cannot be undone.`)) {
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`/api/companies/${companyId}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        await this.loadCompanies();
+                        await this.loadCurrentCompany();
+                        this.showSuccess('Company deleted successfully!');
+                    } else {
+                        throw new Error('Failed to delete company');
+                    }
+                } catch (error) {
+                    console.error('Error deleting company:', error);
+                    this.showError('Failed to delete company');
+                }
+            }
+
+            setupEventListeners() {
+                // Create company form
+                document.getElementById('createCompanyForm').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    await this.createCompany(new FormData(e.target));
+                });
+
+                // Edit company form
+                document.getElementById('editCompanyForm').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    await this.updateCompany();
+                });
+
+                // Generate database form
+                document.getElementById('generateDatabaseForm').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    await this.generateDatabase();
+                });
+
+                // Update time estimate when sample data checkbox changes
+                document.getElementById('includeSampleData').addEventListener('change', (e) => {
+                    const timeEstimate = document.getElementById('timeEstimate');
+                    if (e.target.checked) {
+                        timeEstimate.textContent = '30 seconds - 2 minutes';
+                    } else {
+                        timeEstimate.textContent = '~30 seconds';
+                    }
+                });
+
+                // Modal close buttons
+                document.querySelectorAll('.modal-close').forEach(close => {
+                    close.addEventListener('click', () => {
+                        close.closest('.modal').style.display = 'none';
+                    });
+                });
+
+                // Close modals on outside click
+                window.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('modal')) {
+                        e.target.style.display = 'none';
+                    }
+                });
+            }
+
+            async createCompany(formData) {
+                const button = document.getElementById('createButtonText');
+                const spinner = document.getElementById('createButtonSpinner');
+                
+                button.style.display = 'none';
+                spinner.style.display = 'inline-block';
+
+                try {
+                    const data = Object.fromEntries(formData);
+                    const response = await fetch('/api/companies/', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (response.ok) {
+                        document.getElementById('createCompanyForm').reset();
+                        await this.loadCompanies();
+                        this.showSuccess('Company created successfully!');
+                    } else {
+                        const error = await response.json();
+                        throw new Error(error.detail || 'Failed to create company');
+                    }
+                } catch (error) {
+                    console.error('Error creating company:', error);
+                    this.showError('Failed to create company: ' + error.message);
+                } finally {
+                    button.style.display = 'inline';
+                    spinner.style.display = 'none';
+                }
+            }
+
+            async updateCompany() {
+                try {
+                    const companyId = document.getElementById('editCompanyId').value;
+                    const data = {
+                        name: document.getElementById('editCompanyName').value,
+                        company_description: document.getElementById('editIndustryDescription').value
+                    };
+
+                    const response = await fetch(`/api/companies/${companyId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (response.ok) {
+                        document.getElementById('editModal').style.display = 'none';
+                        await this.loadCompanies();
+                        this.showSuccess('Company updated successfully!');
+                    } else {
+                        throw new Error('Failed to update company');
+                    }
+                } catch (error) {
+                    console.error('Error updating company:', error);
+                    this.showError('Failed to update company');
+                }
+            }
+
+            async generateDatabase() {
+                const button = document.getElementById('generateButtonText');
+                const spinner = document.getElementById('generateButtonSpinner');
+                
+                button.style.display = 'none';
+                spinner.style.display = 'inline-block';
+
+                try {
+                    const companyId = document.getElementById('generateCompanyId').value;
+                    const requirements = document.getElementById('businessRequirements').value;
+                    const includeSampleData = document.getElementById('includeSampleData').checked;
+
+                    const response = await fetch(`/api/companies/${companyId}/generate-database`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            business_requirements: requirements,
+                            include_sample_data: includeSampleData
+                        })
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        document.getElementById('generateModal').style.display = 'none';
+                        let message = `Database generated successfully! Created ${result.tables_created} tables`;
+                        if (result.records_inserted > 0) {
+                            message += ` with ${result.records_inserted} records`;
+                        }
+                        message += '.';
+                        this.showSuccess(message);
+                    } else {
+                        // Handle HTTP error responses
+                        let errorMessage = 'Failed to generate database';
+                        try {
+                            const errorData = await response.json();
+                            errorMessage = errorData.detail || errorMessage;
+                        } catch (parseError) {
+                            // If we can't parse the error response, use status text
+                            errorMessage = `Failed to generate database: ${response.status} ${response.statusText}`;
+                        }
+                        throw new Error(errorMessage);
+                    }
+                } catch (error) {
+                    console.error('Error generating database:', error);
+                    let displayMessage = 'Failed to generate database';
+                    
+                    // Handle different types of errors
+                    if (error instanceof TypeError && error.message.includes('fetch')) {
+                        displayMessage = 'Network error: Please check your connection';
+                    } else if (error.message && typeof error.message === 'string') {
+                        displayMessage = error.message;
+                    } else {
+                        displayMessage = 'An unexpected error occurred while generating the database';
+                    }
+                    
+                    this.showError(displayMessage);
+                } finally {
+                    button.style.display = 'inline';
+                    spinner.style.display = 'none';
+                }
+            }
+
+            showSuccess(message) {
+                // Simple toast notification
+                const toast = document.createElement('div');
+                toast.style.cssText = `
+                    position: fixed; top: 20px; right: 20px; z-index: 9999;
+                    background: #4CAF50; color: white; padding: 15px 20px;
+                    border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                `;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 3000);
+            }
+
+            showError(message) {
+                const toast = document.createElement('div');
+                toast.style.cssText = `
+                    position: fixed; top: 20px; right: 20px; z-index: 9999;
+                    background: #f44336; color: white; padding: 15px 20px;
+                    border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                `;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 5000);
+            }
+        }
+
+        // Initialize company manager
+        const companyManager = new CompanyManager();
+    </script>
+</body>
+</html>
